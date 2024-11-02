@@ -1,8 +1,6 @@
-import React from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import Header from "../Header/Header";
 import Car1 from "../../assets/Car1.png";
 import Car2 from "../../assets/Car2.png";
 import Car3 from "../../assets/Car3.png";

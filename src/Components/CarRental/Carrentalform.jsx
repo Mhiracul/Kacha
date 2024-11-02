@@ -41,7 +41,7 @@ const CarRentalForm = () => {
         <div className="w-full max-w-[1000px] text-xs font-light bg-[#222] rounded-[60px] shadow-lg">
           <form className="flex flex-col md:flex-row items-center p-4 gap-4 md:gap-6">
             {/* Car Type Dropdown */}
-            <div className="relative group w-full lg:w-auto">
+            <div className="relative group w-full lg:w-auto ">
               <div
                 className="border-r border-[#2b2b2b] justify-between flex  items-center text-[#999] rounded-lg p-2 cursor-pointer"
                 onClick={() => setCarType(carType)}
@@ -76,7 +76,7 @@ const CarRentalForm = () => {
               </div>
             </div>
 
-            <div className="relative group w-full justify-between flex items-center lg:w-auto">
+            <div className="relative group w-full  justify-between flex items-center lg:w-auto">
               <input
                 type="date"
                 value={pickupDate}

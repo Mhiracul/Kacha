@@ -66,3 +66,24 @@ input[type="date"].no-date-icon {
 .carousel-container:hover .swiper-button-next {
   opacity: 1;
 }
+
+.custom-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.custom-list li {
+  position: relative;
+  padding-left: 1.2em; /* Adjust as needed */
+}
+
+.custom-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.5em; /* Adjust as needed */
+  width: 0.3em; /* Size of the dot */
+  height: 0.3em; /* Size of the dot */
+  background-color: #f5b754; /* Yellow color */
+  border-radius: 50%; /* Makes it a circle */
+}

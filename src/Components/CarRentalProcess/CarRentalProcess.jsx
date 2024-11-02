@@ -77,8 +77,8 @@ const CarRentalProcess = () => {
         <div className="text-center mt-12">
           <p className="text-xs">
             <MdInfo className="inline-block mr-2 text-[#f5b754]" />
-            If you've never rented a car before, we'll guide you through the
-            process.
+            If you{"'"}ve never rented a car before, we{"'"}ll guide you through
+            the process.
           </p>
         </div>
       </div>

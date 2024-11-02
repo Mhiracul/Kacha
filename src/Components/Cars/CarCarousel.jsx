@@ -112,7 +112,7 @@ const cars = [
 const CarCarousel = () => {
   return (
     <div className="relative font-outfit bg-gray-900 py-16">
-      <div className="px-10 lg:px-0">
+      <div className="px-2 lg:px-0">
         <div className="text-center mb-12">
           <div className="text-[#f5b754] tracking-[0.2rem] text-[10px] text-light  uppercase">
             Select Your Car
@@ -155,14 +155,14 @@ const CarCarousel = () => {
                   className="w-full h-96 object-cover"
                 />
                 <div className="absolute bottom-0  left-0 right-0 bg-gray-800 bg-opacity-70 p-4">
-                  <div className="flex justify-between items-center">
+                  <div className="flex md:flex-row flex-col justify-between items-center">
                     <div>
-                      <div className="text-white text-lg font-semibold mb-2">
+                      <div className="text-white md:text-lg text-sm md:font-semibold font-medium mb-2">
                         <a href={car.link} className="hover:underline">
                           {car.name}
                         </a>
                       </div>
-                      <div className="text-gray-300 text-sm mb-2">
+                      <div className="text-gray-300 md:text-sm text-xs mb-2">
                         {car.details}
                       </div>
                     </div>
