@@ -78,7 +78,7 @@ const Header = () => {
 
           <div className="flex space-x-6 items-center">
             {/* Cart Icon */}
-            <a className="cart-mini-uri nav-link" href="">
+            <a className="cart-mini-uri nav-link" href="/cart">
               <TiShoppingCart className="text-lg cursor-pointer" />
             </a>
 

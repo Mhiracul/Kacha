@@ -22,7 +22,7 @@ const Banner = () => {
           <div className="text-[#f5b754] text-[10px] tracking-[0.3em] uppercase">
             What we do
           </div>
-          <h1 className="md:text-5xl text-2xl py-6 font-bold mb-4">
+          <h1 className="md:text-5xl text-3xl py-6 font-bold mb-4">
             <span className="text-white">Our </span>
             <span className="text-[#f5b754]">Services</span>
           </h1>

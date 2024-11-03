@@ -143,7 +143,7 @@ const Footer = () => {
             >
               <li>
                 <a
-                  href=""
+                  href="/about"
                   className="hover:underline inline-flex items-center gap-[0.4px]"
                 >
                   <LuDot className="text-[#f5b754] text-3xl" />
@@ -161,16 +161,16 @@ const Footer = () => {
               </li>
               <li>
                 <a
-                  href=""
+                  href="pricing-plan"
                   className="hover:underline inline-flex items-center gap-[0.4px]"
                 >
                   <LuDot className="text-[#f5b754] text-3xl" />
-                  Car Types
+                  Pricing
                 </a>
               </li>
               <li>
                 <a
-                  href=""
+                  href="/FAQ"
                   className="hover:underline inline-flex items-center gap-[0.4px]"
                 >
                   <LuDot className="text-[#f5b754] text-3xl" />
@@ -179,7 +179,7 @@ const Footer = () => {
               </li>
               <li>
                 <a
-                  href=""
+                  href="/contact"
                   className="hover:underline inline-flex items-center gap-[0.4px]"
                 >
                   <LuDot className="text-[#f5b754] text-3xl" />
