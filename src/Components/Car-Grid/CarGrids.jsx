@@ -11,7 +11,7 @@ const CarGrids = () => {
 
         <div className="grid xl:grid-cols-2 lg:grid-cols-2 grid-cols-1 xl:gap-9 gap-20 md:px-20 px-0">
           <div className="relative ">
-            <img src={Pics} alt="" className="rounded-3xl h-full" />
+            <img src={Pics} alt="" className="rounded-3xl" />
 
             <div className="absolute mx-auto -bottom-10  max-w-lg rounded-2xl left-0 right-0 bg-[#222] p-4">
               <div className="flex md:flex-row flex-row justify-between items-center">
@@ -43,7 +43,7 @@ const CarGrids = () => {
           </div>
 
           <div className="relative ">
-            <img src={Pics} alt="" className="rounded-3xl h-full" />
+            <img src={Pics} alt="" className="rounded-3xl" />
 
             <div className="absolute mx-auto -bottom-10  max-w-lg rounded-2xl left-0 right-0 bg-[#222] p-4">
               <div className="flex md:flex-row flex-row justify-between items-center">
@@ -75,7 +75,7 @@ const CarGrids = () => {
           </div>
 
           <div className="relative ">
-            <img src={Pics} alt="" className="rounded-3xl h-full" />
+            <img src={Pics} alt="" className="rounded-3xl" />
 
             <div className="absolute mx-auto -bottom-10  max-w-lg rounded-2xl left-0 right-0 bg-[#222] p-4">
               <div className="flex md:flex-row flex-row justify-between items-center">
@@ -107,7 +107,7 @@ const CarGrids = () => {
           </div>
 
           <div className="relative ">
-            <img src={Pics} alt="" className="rounded-3xl h-full" />
+            <img src={Pics} alt="" className="rounded-3xl " />
 
             <div className="absolute mx-auto -bottom-10  max-w-lg rounded-2xl left-0 right-0 bg-[#222] p-4">
               <div className="flex md:flex-row flex-row justify-between items-center">
