@@ -93,10 +93,6 @@ const Banner = () => {
               </h1>
               <h5 className="md:text-xl text-sm font-normal mb-6">
                 {slide.subTitle}{" "}
-                <span className="md:text-lg text-xs ml-5 text-[#f5b754] font-bold">
-                  {slide.price}/
-                  <span className="text-xs text-white font-light">DAY</span>
-                </span>
               </h5>
               <div className="flex space-x-4">
                 <a
