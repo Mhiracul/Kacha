@@ -6,6 +6,7 @@ import Contact from "./Pages/Contact";
 import FAQ from "./Pages/FAQ";
 import Cart from "./Pages/Cart";
 import AboutM from "./Pages/AboutM";
+import CarGrid from "./Pages/CarGrid";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/FAQ" element={<FAQ />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/about" element={<AboutM />} />
+        <Route path="/car-grid" element={<CarGrid />} />
       </Routes>
     </Router>
   );

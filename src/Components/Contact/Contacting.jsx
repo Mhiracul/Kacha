@@ -107,6 +107,9 @@ const Contacting = () => {
                       <p className="text-[#999] text-sm font-light transition duration-500 group-hover:text-black">
                         +234 81-2498-5138
                       </p>
+                      <p className="text-[#999] text-sm font-light transition duration-500 group-hover:text-black">
+                        +234 81-0922-0869
+                      </p>
                       <MdPhone
                         className="absolute bottom-[-20px] right-[-20px] text-[120px]"
                         style={{ color: "rgba(255, 255, 255, 0.1)" }}
