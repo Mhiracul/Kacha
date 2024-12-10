@@ -195,7 +195,7 @@ const CarRent = () => {
                   X
                 </button>
               </div>
-              <div className="h-full overflow-y-auto py-16">
+              <div className="h-full overflow-y-auto py-16 px-4">
                 <form onSubmit={handleSubmit}>
                   <div className="flex flex-col gap-4">
                     {/* Name */}
@@ -291,7 +291,7 @@ const CarRent = () => {
                     <div className="flex flex-wrap gap-4">
                       <div className="flex flex-col gap-2 w-full ">
                         <label htmlFor="day" className="text-sm">
-                          Date of Booking
+                          Start Date
                         </label>
                         <input
                           type="date"
