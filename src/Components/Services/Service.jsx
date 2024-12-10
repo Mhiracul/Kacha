@@ -8,7 +8,7 @@ const Service = () => {
 
   return (
     <div className="bg-[#1b1b1b] w-full font-outfit text-white py-20">
-      <div className="px-20">
+      <div className="md:px-20 px-10">
         {/* Section Title */}
         <div className="flex items-center flex-col gap-20 mb-12">
           <div className="bg-[#f5b754] w-[1px] h-16"></div>

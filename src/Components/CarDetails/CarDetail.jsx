@@ -23,7 +23,7 @@ const CarDetail = () => {
       <Banner carName={car.name} carImage={car.imgSrc} />
       <div className="mx-auto px-20 py-10">
         {/* Car Details Section */}
-        <div className="flex container  justify-between ">
+        <div className="flex xl:flex-row flex-col container  justify-between ">
           <div>
             <h1 className="text-white text-lg font-medium">
               General Information

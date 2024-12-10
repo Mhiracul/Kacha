@@ -115,7 +115,7 @@ const Header = () => {
           nav ? "translate-y-16 " : "-translate-y-full"
         }`}
       >
-        <ul className="text-white container mx-auto  px-16 text-sm font-light py-4">
+        <ul className="text-white container mx-auto  px-6 text-sm font-light py-4">
           <li>
             <Link to="/" className="block py-2">
               Home

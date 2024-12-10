@@ -182,8 +182,8 @@ const CarRent = () => {
 
         {/* Modal Popup */}
         {selectedCar && (
-          <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center items-center">
-            <div className="bg-[#222] rounded-2xl overflow-hidden w-full max-w-2xl h-[80vh] p-4">
+          <div className="fixed inset-0 z-50 px-4 bg-black bg-opacity-50 flex justify-center items-center">
+            <div className="bg-[#222] rounded-2xl overflow-hidden w-full max-w-2xl h-[80vh] ">
               <div className="bg-[#f5b754] text-center rounded-t-2xl py-4 relative">
                 <div className="xl:text-xl text-lg font-bold text-[#000]">
                   Rent {selectedCar.name}
