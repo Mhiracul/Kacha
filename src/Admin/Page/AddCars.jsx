@@ -112,16 +112,28 @@ const AddCars = () => {
                   Car Type
                 </label>
                 <div className="relative">
-                  <input
-                    type="text"
+                  <select
                     id="type"
                     name="type"
                     className="form-control p-3 pl-14 outline-none text-white mt-3 bg-[#0f172a] transition-border-shadow duration-150 ease-in-out border border-gray-300 shadow-md hover:border-blue-500 hover:shadow-lg font-light text-sm w-full block pointer form-sm"
-                    placeholder="Car Type"
                     value={type}
                     onChange={(e) => setType(e.target.value)}
                     required
-                  />
+                  >
+                    <option value="" disabled>
+                      Select Car Type
+                    </option>
+                    <option value="benz">Benz</option>
+                    <option value="lexus">Lexus</option>
+                    <option value="honda">Honda</option>
+                    <option value="toyota">Toyota</option>
+                    <option value="audi">Audi</option>
+                    <option value="bmw">BMW</option>
+                    <option value="ford">Ford</option>
+                    <option value="chevrolet">Chevrolet</option>
+                    <option value="nissan">Nissan</option>
+                    {/* Add more car types as needed */}
+                  </select>
                 </div>
 
                 <label
