@@ -13,7 +13,7 @@ const Banner = ({ carName, carImage }) => {
         <div className="absolute inset-0 bg-black bg-opacity-50"></div>
 
         {/* Slide Content */}
-        <div className="relative z-10 flex flex-col justify-center items-start h-full py-44 text-left text-white container mx-auto px-4">
+        <div className="relative z-10 flex flex-col justify-center items-start h-full py-44 text-left text-white container mx-auto px-10">
           <div className="text-[#f5b754] text-[10px] tracking-[0.3em] uppercase">
             LUXURY CARS
           </div>

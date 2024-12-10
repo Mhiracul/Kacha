@@ -21,7 +21,7 @@ const CarDetail = () => {
     <div className="bg-[#1b1b1b] font-outfit w-full h-full">
       {/* Banner with dynamic title */}
       <Banner carName={car.name} carImage={car.imgSrc} />
-      <div className="mx-auto px-20 py-10">
+      <div className="mx-auto md:px-20 px-10 py-10">
         {/* Car Details Section */}
         <div className="flex xl:flex-row flex-col container  justify-between ">
           <div>
@@ -38,7 +38,7 @@ const CarDetail = () => {
           </div>
 
           <div className=" text-white py-6">
-            <div className="bg-[#f5b754] text-center rounded-t-2xl px-28 py-4">
+            <div className="bg-[#f5b754] text-center rounded-t-2xl md:px-28 px-10 py-4">
               {" "}
               <div className="text-xl font-bold text-[#000]">
                 ₦{car.price.toLocaleString()}
@@ -74,7 +74,7 @@ const CarDetail = () => {
         <div className="max-w-2xl">
           <h1 className="text-white text-lg font-medium">Image Gallery</h1>
 
-          <div className="grid grid-cols-2 gap-6 mt-6">
+          <div className="grid md:grid-cols-2 grid-cols-1 gap-6 mt-6">
             {/* Image 1 with bottom fade */}
             <div className="relative">
               <img src={Car1} alt="" className="w-full h-full rounded-lg" />
