@@ -87,3 +87,51 @@ input[type="date"].no-date-icon {
   background-color: #f5b754; /* Yellow color */
   border-radius: 50%; /* Makes it a circle */
 }
+
+/* Loader.css */
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #1b1b1b;
+}
+
+.loader {
+  text-align: center;
+}
+
+.loader-circle {
+  width: 128px;
+  height: 128px;
+  background-color: #222;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: 1px solid white;
+  animation: breathe 2s ease-in-out infinite alternate;
+}
+
+.loader-logo {
+  width: 64px; /* Adjust logo size */
+}
+
+.loader-text {
+  font-size: 12px;
+  color: white;
+  font-weight: 500;
+  margin-top: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+@keyframes breathe {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.1);
+  }
+}

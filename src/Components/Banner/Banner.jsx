@@ -2,7 +2,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Car1 from "../../assets/Car1.png";
-import Car2 from "../../assets/Car2.png";
+import Car2 from "../../assets/Car4.jpg";
 import Car3 from "../../assets/Car3.png";
 import { MdOutlineArrowOutward } from "react-icons/md";
 
@@ -37,29 +37,24 @@ const Banner = () => {
   const slides = [
     {
       background: Car2,
-      title: "Rental Car",
-      subTitle: "2017 Mercedes Gle63s",
+      title: "Car Rentals",
       price: "$600 ",
-      viewDetailsLink: Car1,
+      viewDetailsLink: "/car-rentals",
       rentNowLink: "https://webredox.net/demo/wp/renax/demo12/car-listing/",
     },
     {
       background: Car1,
-      title: "Rental Car",
-      subTitle: "2022 RANGE ROVER SPORT HST",
+      title: "Car Sales",
       price: "$900",
-      viewDetailsLink:
-        "https://webredox.net/demo/wp/renax/demo12/product/aston-martin-dbx/",
+      viewDetailsLink: "/car-sales",
       rentNowLink:
         "https://webredox.net/demo/wp/renax/demo12/product/aston-martin-dbx/",
     },
     {
       background: Car3,
-      title: "Rental Car",
-      subTitle: "Pano ThumbStart",
+      title: "Car Repaint",
       price: "$450",
-      viewDetailsLink:
-        "https://webredox.net/demo/wp/renax/demo12/product/bugatti-mistral-w16/",
+      viewDetailsLink: "/car-repaint",
       rentNowLink:
         "https://webredox.net/demo/wp/renax/demo12/product/bugatti-mistral-w16/",
     },
@@ -96,21 +91,21 @@ const Banner = () => {
               </h5>
               <div className="flex space-x-4">
                 <a
-                  href=""
+                  href={slide.viewDetailsLink}
                   className="bg-[#f5b754] hover:bg-yellow-600 inline-flex gap-1  items-center text-black text-xs font-outfit px-6 py-3 rounded-full transition-all"
                   target="_self"
                   rel="noopener noreferrer"
                 >
                   View Details <MdOutlineArrowOutward />
                 </a>
-                <a
+                {/*} <a
                   href=""
                   className="bg-transparent border border-[#f5b754] inline-flex gap-1  items-center text-[#f5b754] hover:bg-[#f5b754] hover:text-black text-xs font-outfit px-6 py-3 rounded-full transition-all"
                   target="_self"
                   rel="noopener noreferrer"
                 >
                   Rent Now <MdOutlineArrowOutward />
-                </a>
+                </a> */}
               </div>
             </div>
           </section>

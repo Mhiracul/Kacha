@@ -25,10 +25,12 @@ const About = () => {
           {/* Description */}
           <div className="mb-6 max-w-md">
             <p className="text-gray-400 font-light text-sm font-outfit">
-              Car repair quisque sodales dui ut varius vestibulum drana tortor
-              turpis porttitor tellus eu euismod nisl massa nutodio in the miss
-              volume place urna lacinia eros nunta urna mauris vehicula rutrum
-              in the miss on volume interdum.
+              At Kacha Autos, we're all about cars, and we're here to make your
+              car journey a breeze. We believe in keeping things straightforward
+              and enjoyable. Whether you're on the hunt for your dream ride or
+              need top-notch car care, we've got you covered. Join us for a ride
+              that's as smooth as your favorite road. Your car adventure starts
+              here!
             </p>
           </div>
 

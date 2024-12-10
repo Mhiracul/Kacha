@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { PiCarProfileFill } from "react-icons/pi";
 import { MdOutlineArrowOutward } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 const Service = () => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -20,37 +21,43 @@ const Service = () => {
               step: "01",
               title: "Corporate Car Rental",
               description:
-                "Lorem ipsum dolor sit amet the consectetur adipiscing elit entesque hendrerit elit nisan lacinia feugiat nunc eu aucton.",
+                "Flexible rental options for businesses, from short-term to long-term leasing.",
+              link: "/car-rentals",
             },
             {
               step: "02",
-              title: "Car Rental with Driver",
+              title: "Car Sales",
               description:
-                "Lorem ipsum dolor sit amet the consectetur adipiscing elit entesque hendrerit elit nisan lacinia feugiat nunc eu aucton.",
+                "Wide selection of new and used vehicles with financing and after-sales support.",
+              link: "/car-sales",
             },
             {
               step: "03",
-              title: "Airport Transfer",
+              title: "Car Registration",
               description:
-                "Lorem ipsum dolor sit amet the consectetur adipiscing elit entesque hendrerit elit nisan lacinia feugiat nunc eu aucton.",
+                "Complete registration services, including title transfers and legal paperwork.",
+              link: "/car-registration",
             },
             {
               step: "04",
-              title: "Fleet Leasing",
+              title: "Car Repaint",
               description:
-                "Lorem ipsum dolor sit amet the consectetur adipiscing elit entesque hendrerit elit nisan lacinia feugiat nunc eu aucton.",
+                "Expert car repainting with high-quality finishes and custom color options.",
+              link: "/car-repaint",
             },
             {
               step: "05",
-              title: "VIP Transfer",
+              title: "Car Upgrade",
               description:
-                "Lorem ipsum dolor sit amet the consectetur adipiscing elit entesque hendrerit elit nisan lacinia feugiat nunc eu aucton.",
+                "Upgrade your vehicle with the latest features, technologies, and customizations.",
+              link: "/corporate-car-rental",
             },
             {
               step: "06",
-              title: "Private Transfer",
+              title: "Car Swap",
               description:
-                "Lorem ipsum dolor sit amet the consectetur adipiscing elit entesque hendrerit elit nisan lacinia feugiat nunc eu aucton.",
+                "Trade in your old car for a newer model with a fair appraisal.",
+              link: "/corporate-car-rental",
             },
           ].map((item, index) => (
             <div key={index} className="w-full">
@@ -72,8 +79,8 @@ const Service = () => {
                         padding: "10px 10px 10px",
                       }}
                     >
-                      <a
-                        href=""
+                      <Link
+                        to={item.link} // Use the defined link here
                         className="hover:bg-[#f5b754] bg-[#222] shadow-md py-5 px-5 rounded-full inline-flex items-center"
                       >
                         {hoveredIndex === index ? (
@@ -81,7 +88,7 @@ const Service = () => {
                         ) : (
                           <PiCarProfileFill color="#f5b754" size={20} />
                         )}
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 </div>

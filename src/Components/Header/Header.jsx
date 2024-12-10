@@ -45,22 +45,22 @@ const Header = () => {
             {showCarsDropdown && (
               <div className="absolute left-0 mt-2 bg-[#222] z-20 text-white min-w-48 p-4 rounded-md shadow-lg">
                 <Link
-                  to="/car-grid"
+                  to="/car-sales"
                   className="block py-1 hover:text-[#f5b754]"
                 >
-                  Car Grid
+                  Car Sales
                 </Link>
                 <Link
-                  to="/car-listing"
+                  to="/car-rentals"
                   className="block py-1 hover:text-[#f5b754]"
                 >
-                  Car Listing
+                  Car Rentals
                 </Link>
                 <Link
-                  to="/car-types"
+                  to="/car-repaint"
                   className="block py-1 hover:text-[#f5b754]"
                 >
-                  Car Types
+                  Car Repaint
                 </Link>
                 <Link
                   to="/car-details"
@@ -78,10 +78,10 @@ const Header = () => {
 
           <div className="flex space-x-6 items-center">
             {/* Cart Icon */}
-            <a className="cart-mini-uri nav-link" href="/cart">
+            {/*  <a className="cart-mini-uri nav-link" href="/cart">
               <TiShoppingCart className="text-lg cursor-pointer" />
             </a>
-
+*/}
             {/* Contact Section */}
             <div className="flex items-center space-x-2">
               {/* Phone Icon */}
@@ -141,22 +141,22 @@ const Header = () => {
             {showCarsDropdown && (
               <div className="bg-[#222] text-white px-4 py-2">
                 <Link
-                  to="/car-grid"
+                  to="/car-sales"
                   className="block py-1 hover:text-[#f5b754]"
                 >
-                  Car Grid
+                  Car Sales
                 </Link>
                 <Link
-                  to="/car-listing"
+                  to="/car-rentals"
                   className="block py-1 hover:text-[#f5b754]"
                 >
-                  Car Listing
+                  Car Rentals
                 </Link>
                 <Link
-                  to="/car-types"
+                  to="/car-repaint"
                   className="block py-1 hover:text-[#f5b754]"
                 >
-                  Car Types
+                  Car Repaint
                 </Link>
                 <Link
                   to="/car-details"

@@ -24,7 +24,7 @@ const Banner = () => {
           </div>
           <h1 className="md:text-5xl text-3xl py-6 font-bold mb-4">
             <span className="text-white">Luxury </span>
-            <span className="text-[#f5b754]">Car Fleet</span>
+            <span className="text-[#f5b754]">Car Sales</span>
           </h1>
         </div>
       </section>

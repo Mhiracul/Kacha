@@ -7,14 +7,15 @@ import Car1 from "../../assets/car-carousel1.png";
 import Car2 from "../../assets/car-carousel2.png";
 import Car3 from "../../assets/car-carousel3.png";
 import Car4 from "../../assets/car-carousel4.png";
+import { Link } from "react-router-dom";
 
-const cars = [
+export const cars = [
   {
     id: 1,
     imgSrc: Car1,
     altText: "Lamborghini Urus",
     name: "Lamborghini Urus",
-    price: 750,
+    price: 7000000,
     details: (
       <>
         <span className="inline-flex gap-1 items-center">
@@ -171,13 +172,19 @@ const CarCarousel = () => {
                         href={car.link}
                         className="block text-sm w-full text-center bg-yellow-500 text-black rounded-full py-2 px-6  hover:bg-yellow-600"
                       >
-                        Details
+                        <Link
+                          to={`/car-details/${car.name
+                            .toLowerCase()
+                            .replace(/\s+/g, "-")}`}
+                          className="block text-sm w-full text-center bg-yellow-500 text-black rounded-full py-2 px-6 hover:bg-yellow-600"
+                        >
+                          Details
+                        </Link>
                       </a>
                       <div className="flex justify-between items-center">
                         <span className="text-[#f5b754] text-lg font-semibold">
-                          ${car.price}
+                          ₦{car.price.toLocaleString()}
                         </span>
-                        <span className="text-gray-300 text-sm">/day</span>
                       </div>
                     </div>
                   </div>

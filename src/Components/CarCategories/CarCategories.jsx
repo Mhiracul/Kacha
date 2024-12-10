@@ -7,7 +7,7 @@ import { Autoplay } from "swiper/modules";
 const CarCategories = () => {
   const categories = [
     {
-      title: "Convertible",
+      title: "Executive Luxury Cars",
       imgSrc:
         "https://webredox.net/demo/wp/renax/demo12/wp-content/uploads/sites/12/2024/04/01.jpg",
       url: "https://webredox.net/demo/wp/renax/demo12/product-category/convertible/",
