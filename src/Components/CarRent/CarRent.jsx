@@ -1,31 +1,12 @@
-import React, { useState } from "react";
-import Pics from "../../assets/Gwagon.jpeg";
-import Pics2 from "../../assets/prado.jpeg";
-import Pics3 from "../../assets/Car2.png";
-import Pics4 from "../../assets/Car3.png";
-import Pics5 from "../../assets/range.jpeg";
-import Pics6 from "../../assets/gx460.jpeg";
+import React, { useState, useEffect } from "react";
 import { FaWhatsapp } from "react-icons/fa";
 import Select from "react-select";
 import { jsPDF } from "jspdf";
-
-// Example car data
-const cars = [
-  { id: 1, name: "G-Wagon", imgSrc: Pics },
-  { id: 2, name: "Prado", imgSrc: Pics2 },
-  { id: 3, name: "Range Rover", imgSrc: Pics5 },
-  { id: 4, name: "Lexus GX 460", imgSrc: Pics6 },
-  { id: 5, name: "Lexus ES", imgSrc: Pics },
-  { id: 6, name: "Honda Civic", imgSrc: Pics4 },
-  { id: 7, name: "Benz A-Class", imgSrc: Pics },
-  { id: 8, name: "Lexus NX", imgSrc: Pics2 },
-  { id: 9, name: "Honda CR-V", imgSrc: Pics3 },
-  { id: 10, name: "Benz E-Class", imgSrc: Pics4 },
-];
+import axios from "axios";
 
 const CarRent = () => {
   const [visibleCarsCount, setVisibleCarsCount] = useState(4);
-  const [selectedCar, setSelectedCar] = useState(null); // Selected car state
+  const [selectedCar, setSelectedCar] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
     location: "",
@@ -36,6 +17,7 @@ const CarRent = () => {
     mopol: "Without Mopol",
     hours: "12",
   });
+  const [cars, setCars] = useState([]); // State to store fetched car data
 
   const carOptions = cars.map((car) => ({ value: car.name, label: car.name }));
   const mopolOptions = [
@@ -49,11 +31,23 @@ const CarRent = () => {
     { value: "72", label: "72 Hours" },
   ];
 
+  useEffect(() => {
+    // Fetch car data from the backend
+    axios
+      .get("https://kachabackend.onrender.com/api/rentals") // Replace with your actual API endpoint
+      .then((response) => {
+        setCars(response.data); // Set the fetched car data
+      })
+      .catch((error) => {
+        console.error("Error fetching cars:", error);
+      });
+  }, []);
+
   const handleCarClick = (car) => {
-    setSelectedCar(car); // Set selected car
+    setSelectedCar(car);
     setFormData({
       ...formData,
-      carType: car.name, // Update car type in form data
+      carType: car.name,
     });
   };
 
@@ -79,48 +73,21 @@ const CarRent = () => {
     doc.text(`Car Type: ${formData.carType}`, 20, 80);
 
     const pdfOutput = doc.output("bloburl");
-
     const whatsappLink = `https://api.whatsapp.com/send?phone=+2348124985138&text=Appointment%20Details%0A%0AName:%20${formData.name}%0ALocation:%20${formData.location}%0ATime:%20${formData.time}%0ADay:%20${formData.day}%0APhone:%20${formData.phone}%0ACar%20Type:%20${formData.carType}%0A%0APDF%20Link:%20${pdfOutput}`;
-
     window.open(whatsappLink, "_blank");
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    generatePDF(); // Generate PDF and open WhatsApp link
+    generatePDF();
   };
 
   const handleSeeMore = () => {
-    setVisibleCarsCount(visibleCarsCount + 4); // Show 4 more cars on each click
+    setVisibleCarsCount(visibleCarsCount + 4);
   };
 
   const closeModal = () => {
-    setSelectedCar(null); // Close modal by setting selected car to null
-  };
-
-  const customStyles = {
-    control: (base) => ({
-      ...base,
-      backgroundColor: "transparent",
-      border: "1px solid rgba(194, 157, 96, 0.3)",
-      borderRadius: "9999px",
-      padding: "4px",
-      boxShadow: "none",
-    }),
-    menu: (base) => ({
-      ...base,
-      backgroundColor: "#222",
-      borderRadius: "8px",
-    }),
-    option: (provided) => ({
-      ...provided,
-      backgroundColor: "transparent",
-      color: "#fff",
-    }),
-    singleValue: (provided) => ({
-      ...provided,
-      color: "#fff",
-    }),
+    setSelectedCar(null);
   };
 
   return (
@@ -147,13 +114,13 @@ const CarRent = () => {
           {cars.slice(0, visibleCarsCount).map((car) => (
             <div
               key={car.id}
-              className="relative  cursor-pointer group"
-              onClick={() => handleCarClick(car)} // Open form modal when a car is clicked
+              className="relative cursor-pointer group"
+              onClick={() => handleCarClick(car)}
             >
               <img
                 src={car.imgSrc}
                 alt={car.name}
-                className="rounded-3xl xl:h-60 lg:h-60 h-60 w-full object-fit object-center  group-hover:opacity-80 group-hover:scale-105 transition duration-300 ease-in-out"
+                className="rounded-3xl xl:h-60 lg:h-60 h-60 w-full object-fit object-center group-hover:opacity-80 group-hover:scale-105 transition duration-300 ease-in-out"
               />
               <div className="absolute mx-auto -bottom-10 max-w-lg rounded-2xl left-0 right-0 bg-[#222] p-4">
                 <div className="flex md:flex-row flex-col justify-between items-start md:items-center">
@@ -182,7 +149,7 @@ const CarRent = () => {
           </div>
         )}
 
-        {/* Modal Popup */}
+        {/* Modal */}
         {selectedCar && (
           <div className="fixed inset-0 z-50 px-4 bg-black bg-opacity-50 flex justify-center items-center">
             <div className="bg-[#222] rounded-2xl overflow-hidden w-full max-w-2xl h-[80vh] ">
