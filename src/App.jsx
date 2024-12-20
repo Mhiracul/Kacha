@@ -15,6 +15,7 @@ import AddCars from "./Admin/Page/AddCars";
 import AdminLogin from "./Admin/AdminLogin";
 import { useEffect, useState } from "react";
 import Loader from "./Loader";
+import EditCar from "./Admin/Page/EditCar";
 
 const getToken = () => localStorage.getItem("adminToken");
 
@@ -56,6 +57,7 @@ function App() {
           <Route path="/car-repaint" element={<CarRepaint />} />
           <Route path="/car-rentals" element={<CarRentals />} />
           <Route path="/car-details/:carName" element={<CarDetails />} />
+          <Route path="/edit-car" element={<EditCar />} />
         </Routes>
       )}
     </Router>

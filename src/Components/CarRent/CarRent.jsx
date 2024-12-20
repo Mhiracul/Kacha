@@ -1,18 +1,20 @@
 import React, { useState } from "react";
-import Pics from "../../assets/7.jpg";
-import Pics2 from "../../assets/Car1.png";
+import Pics from "../../assets/gwagon.jpeg";
+import Pics2 from "../../assets/prado.jpeg";
 import Pics3 from "../../assets/Car2.png";
 import Pics4 from "../../assets/Car3.png";
+import Pics5 from "../../assets/range.jpeg";
+import Pics6 from "../../assets/gx460.jpeg";
 import { FaWhatsapp } from "react-icons/fa";
 import Select from "react-select";
 import { jsPDF } from "jspdf";
 
 // Example car data
 const cars = [
-  { id: 1, name: "Benz S-Class", imgSrc: Pics },
-  { id: 2, name: "Lexus RX", imgSrc: Pics2 },
-  { id: 3, name: "Honda Accord", imgSrc: Pics },
-  { id: 4, name: "Benz G-Wagon", imgSrc: Pics3 },
+  { id: 1, name: "G-Wagon", imgSrc: Pics },
+  { id: 2, name: "Prado", imgSrc: Pics2 },
+  { id: 3, name: "Range Rover", imgSrc: Pics5 },
+  { id: 4, name: "Lexus GX 460", imgSrc: Pics6 },
   { id: 5, name: "Lexus ES", imgSrc: Pics },
   { id: 6, name: "Honda Civic", imgSrc: Pics4 },
   { id: 7, name: "Benz A-Class", imgSrc: Pics },
@@ -141,17 +143,17 @@ const CarRent = () => {
           </p>
         </div>
         {/* Car Grid */}
-        <div className="grid xl:grid-cols-2 lg:grid-cols-2 grid-cols-1 xl:gap-20 gap-20">
+        <div className="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 xl:gap-20 gap-20">
           {cars.slice(0, visibleCarsCount).map((car) => (
             <div
               key={car.id}
-              className="relative cursor-pointer group"
+              className="relative  cursor-pointer group"
               onClick={() => handleCarClick(car)} // Open form modal when a car is clicked
             >
               <img
                 src={car.imgSrc}
                 alt={car.name}
-                className="rounded-3xl h-60 w-full object-cover group-hover:opacity-80 group-hover:scale-105 transition duration-300 ease-in-out"
+                className="rounded-3xl xl:h-60 lg:h-60 h-60 w-full object-fit object-center  group-hover:opacity-80 group-hover:scale-105 transition duration-300 ease-in-out"
               />
               <div className="absolute mx-auto -bottom-10 max-w-lg rounded-2xl left-0 right-0 bg-[#222] p-4">
                 <div className="flex md:flex-row flex-col justify-between items-start md:items-center">
