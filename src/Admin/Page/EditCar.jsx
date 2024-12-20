@@ -10,7 +10,9 @@ const EditCar = () => {
   useEffect(() => {
     const fetchCars = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/cars");
+        const response = await axios.get(
+          "https://kachabackend.onrender.com/api/cars"
+        );
         setCars(response.data);
       } catch (error) {
         console.error("Error fetching car data:", error);
@@ -22,7 +24,7 @@ const EditCar = () => {
 
   const handleStatusChange = async (id, newStatus) => {
     try {
-      await axios.put(`http://localhost:5000/api/cars/${id}`, {
+      await axios.put(`https://kachabackend.onrender.com/api/cars/${id}`, {
         status: newStatus,
       });
       setCars((prevCars) =>
