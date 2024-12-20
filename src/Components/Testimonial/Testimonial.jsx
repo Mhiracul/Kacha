@@ -6,26 +6,26 @@ import { Autoplay } from "swiper/modules";
 
 const testimonials = [
   {
-    name: "Olivia Brown",
+    name: "Adeola Johnson",
     role: "Customer",
     quote:
-      "Came in for walk-in inspection and oil change. Brown is a delight to deal with. He took my car right in, and completed work in a short time. Highly recommend the shop.",
+      "The service was excellent! The team was professional, and they made sure my car was in top shape. Highly recommend them!",
     imgSrc:
       "https://webredox.net/demo/wp/renax/wp-content/uploads/2024/04/2-1.jpg",
   },
   {
-    name: "Dan Martin",
+    name: "Chidi Okafor",
     role: "Customer",
     quote:
-      "Came in for walk-in inspection and oil change. Brown is a delight to deal with. He took my car right in, and completed work in a short time. Highly recommend the shop.",
+      "I was impressed by the swift response and quality of work. Chidi ensured everything was perfect before handing my car back.",
     imgSrc:
       "https://webredox.net/demo/wp/renax/wp-content/uploads/2024/04/2-1.jpg",
   },
   {
-    name: "Emily Martin",
+    name: "Fatima Ibrahim",
     role: "Customer",
     quote:
-      "Came in for walk-in inspection and oil change. Brown is a delight to deal with. He took my car right in, and completed work in a short time. Highly recommend the shop.",
+      "The customer service was exceptional. They kept me updated throughout the process, and my car feels brand new again!",
     imgSrc:
       "https://webredox.net/demo/wp/renax/wp-content/uploads/2024/04/4.jpg",
   },
