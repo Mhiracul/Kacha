@@ -118,7 +118,9 @@ const CarRent = () => {
               onClick={() => handleCarClick(car)}
             >
               <img
-                src={car.imgSrc}
+                src={`data:image/${
+                  car.imgSrc.includes("png") ? "png" : "jpeg"
+                };base64,${car.imgSrc}`}
                 alt={car.name}
                 className="rounded-3xl xl:h-60 lg:h-60 h-60 w-full object-fit object-center group-hover:opacity-80 group-hover:scale-105 transition duration-300 ease-in-out"
               />
