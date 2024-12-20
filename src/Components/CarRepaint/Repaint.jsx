@@ -1,11 +1,7 @@
 import React, { useState } from "react";
 import { FaWhatsapp } from "react-icons/fa";
-import { jsPDF } from "jspdf";
-import Car1 from "../../assets/car-carousel1.png";
-import Car2 from "../../assets/car-carousel2.png";
 import Paint from "../../assets/paint.jpg";
 
-// PDF generation and form submission
 const Repaint = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -24,34 +20,14 @@ const Repaint = () => {
     });
   };
 
-  const generatePDF = () => {
-    const doc = new jsPDF();
-
-    // Add content to the PDF
-    doc.setFontSize(20);
-    doc.text("Appointment Details", 20, 20);
-
-    doc.setFontSize(14);
-    doc.text(`Name: ${formData.name}`, 20, 30);
-    doc.text(`Location: ${formData.location}`, 20, 40);
-    doc.text(`Time: ${formData.time}`, 20, 50);
-    doc.text(`Day: ${formData.day}`, 20, 60);
-    doc.text(`Email: ${formData.email}`, 20, 70);
-    doc.text(`Car Type: ${formData.carType}`, 20, 80);
-
-    // Save the PDF to a blob or a URL (optional: you can send this to a server or cloud storage)
-    const pdfOutput = doc.output("bloburl");
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
     // Generate WhatsApp URL
-    const whatsappLink = `https://api.whatsapp.com/send?phone=+2348124985138&text=Appointment%20Details%0A%0AName:%20${formData.name}%0ALocation:%20${formData.location}%0ATime:%20${formData.time}%0ADay:%20${formData.day}%0AEmail:%20${formData.email}%0ACar%20Type:%20${formData.carType}%0A%0APDF%20Link:%20${pdfOutput}`;
+    const whatsappLink = `https://api.whatsapp.com/send?phone=+2348124985138&text=Appointment%20Details%0A%0AName:%20${formData.name}%0ALocation:%20${formData.location}%0ATime:%20${formData.time}%0ADay:%20${formData.day}%0AEmail:%20${formData.email}%0ACar%20Type:%20${formData.carType}`;
 
     // Open WhatsApp in a new tab with the generated details
     window.open(whatsappLink, "_blank");
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    generatePDF(); // Generate PDF and open WhatsApp link
   };
 
   return (
