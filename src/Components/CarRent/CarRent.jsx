@@ -3,10 +3,14 @@ import { FaWhatsapp } from "react-icons/fa";
 import Select from "react-select";
 import { jsPDF } from "jspdf";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const CarRent = () => {
   const [visibleCarsCount, setVisibleCarsCount] = useState(4);
+  const navigate = useNavigate();
   const [selectedCar, setSelectedCar] = useState(null);
+  const [endDate, setEndDate] = useState("");
+  const [cars, setCars] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
     location: "",
@@ -17,13 +21,16 @@ const CarRent = () => {
     mopol: "Without Mopol",
     hours: "12",
   });
-  const [cars, setCars] = useState([]); // State to store fetched car data
+  const [suggestions, setSuggestions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [calculatedPrice, setCalculatedPrice] = useState(null); // New state to store the calculated price
+  const [carDetails, setCarDetails] = useState(null);
 
-  const carOptions = cars.map((car) => ({ value: car.name, label: car.name }));
   const mopolOptions = [
     { value: "With Mopol", label: "With Mopol" },
     { value: "Without Mopol", label: "Without Mopol" },
   ];
+
   const hoursOptions = [
     { value: "12", label: "12 Hours" },
     { value: "24", label: "24 Hours" },
@@ -32,31 +39,73 @@ const CarRent = () => {
   ];
 
   useEffect(() => {
-    // Fetch car data from the backend
     axios
-      .get("https://kachabackend.onrender.com/api/rentals") // Replace with your actual API endpoint
+      .get("https://kachabackend.onrender.com/api/rentals")
       .then((response) => {
-        setCars(response.data); // Set the fetched car data
+        setCars(response.data);
       })
       .catch((error) => {
         console.error("Error fetching cars:", error);
       });
   }, []);
 
-  const handleCarClick = (car) => {
-    setSelectedCar(car);
-    setFormData({
-      ...formData,
-      carType: car.name,
-    });
-  };
-
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    setFormData({ ...formData, [name]: value });
+
+    if (name === "hours" && value > 24) {
+      setEndDate(""); // Clear end date when hours change
+    }
+  };
+
+  const handleSuggestionClick = (suggestion) => {
+    setFormData({ ...formData, location: suggestion.address.label });
+    setSuggestions([]);
+  };
+
+  const handleCarClick = (car) => {
+    setSelectedCar(car);
+    setFormData({ ...formData, carType: car.name });
+  };
+
+  const calculateTotalPrice = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/rentals/price",
+        {
+          carId: selectedCar._id,
+          hours: parseInt(formData.hours),
+          mopol: formData.mopol,
+        }
+      );
+
+      setCarDetails(response.data.carDetails); // Set car details received from the backend
+      setCalculatedPrice(response.data.totalPrice); // Set the price returned from the backend
+    } catch (error) {
+      console.error("Error calculating price:", error);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Wait for the price calculation
+    await calculateTotalPrice();
+
+    // Navigate after calculatedPrice is updated
+    if (calculatedPrice) {
+      navigate("/confirmation", {
+        state: {
+          car: selectedCar,
+          totalPrice: calculatedPrice,
+          formData,
+          carDetails,
+          day: formData.day,
+          pickupLocation: formData.pickupLocation,
+          destination: formData.destination, // Pass other details as needed
+        },
+      });
+    }
   };
 
   const generatePDF = () => {
@@ -77,11 +126,6 @@ const CarRent = () => {
     window.open(whatsappLink, "_blank");
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    generatePDF();
-  };
-
   const handleSeeMore = () => {
     setVisibleCarsCount(visibleCarsCount + 4);
   };
@@ -90,9 +134,34 @@ const CarRent = () => {
     setSelectedCar(null);
   };
 
+  const customStyles = {
+    control: (base) => ({
+      ...base,
+      backgroundColor: "#2c2c2c",
+      border: "1px solid #4b5563",
+      borderRadius: "9px",
+      padding: "4px",
+      boxShadow: "none",
+    }),
+    menu: (base) => ({
+      ...base,
+      backgroundColor: "#2c2c2c",
+      borderRadius: "1px",
+    }),
+    option: (provided) => ({
+      ...provided,
+      backgroundColor: "#2c2c2c",
+      color: "#fff",
+    }),
+    singleValue: (provided) => ({
+      ...provided,
+      color: "#fff",
+    }),
+  };
+
   return (
-    <div className="bg-[#1b1b1b] w-full font-outfit text-white py-20">
-      <div className="md:px-20 px-10">
+    <div className="bg-[#1b1b1b] w-full font-outfit   text-white py-20">
+      <div className="container mx-auto md:px-20 px-10">
         {/* Section Title */}
         <div className="flex items-center flex-col gap-20 mb-12">
           <div className="bg-[#f5b754] w-[1px] h-16"></div>
@@ -118,7 +187,9 @@ const CarRent = () => {
               onClick={() => handleCarClick(car)}
             >
               <img
-                src={car.imgSrc}
+                src={`data:image/${
+                  car.imgSrc.includes("png") ? "png" : "jpeg"
+                };base64,${car.imgSrc}`}
                 alt={car.name}
                 className="rounded-3xl xl:h-60 lg:h-60 h-60 w-full object-fit object-center group-hover:opacity-80 group-hover:scale-105 transition duration-300 ease-in-out"
               />
@@ -178,28 +249,38 @@ const CarRent = () => {
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
-                        className="rounded-full bg-transparent border-[#C19D60] outline-none border-opacity-5 border p-2"
+                        className="w-full p-3 rounded-lg mt-2 bg-[#2c2c2c] border outline-none border-gray-600"
                         required
                       />
                     </div>
 
                     {/* Pick Up Location */}
-                    <div className="flex flex-col gap-2">
-                      <label htmlFor="location" className="text-sm">
+                    <div className="mb-4">
+                      <label className="text-white text-sm">
                         Pick Up Location
                       </label>
                       <input
                         type="text"
-                        id="location"
-                        name="location"
-                        value={formData.location}
+                        name="pickupLocation"
+                        className="w-full p-3 rounded-lg mt-2 bg-[#2c2c2c] border outline-none border-gray-600"
+                        value={formData.pickupLocation}
                         onChange={handleChange}
-                        className="rounded-full bg-transparent border-[#C19D60] outline-none border-opacity-5 border p-2"
-                        required
+                        placeholder="Enter pick up location"
                       />
                     </div>
 
-                    {/* Duration (Hours) */}
+                    <div className="mb-4">
+                      <label className="text-white text-sm">Destination</label>
+                      <input
+                        type="text"
+                        name="destination"
+                        className="w-full p-3 rounded-lg mt-2 bg-[#2c2c2c] border outline-none border-gray-600"
+                        value={formData.destination}
+                        onChange={handleChange}
+                        placeholder="Enter destination"
+                      />
+                    </div>
+
                     <div className="flex flex-col gap-2 w-full">
                       <label htmlFor="hours" className="text-sm mt-4">
                         Hours
@@ -207,6 +288,7 @@ const CarRent = () => {
                       <Select
                         name="hours"
                         options={hoursOptions}
+                        styles={customStyles}
                         value={{
                           label: formData.hours + " Hours",
                           value: formData.hours,
@@ -216,15 +298,14 @@ const CarRent = () => {
                             target: { name: "hours", value: e.value },
                           })
                         }
-                        styles={customStyles}
-                        className="rounded-full bg-transparent text-black"
                       />
                     </div>
+                    {/* Duration (Hours) */}
 
                     {/* Mopol Option */}
                     <div className="flex flex-col gap-2 w-full">
                       <label htmlFor="mopol" className="text-sm mt-4">
-                        Mopol Option
+                        Security Personnel
                       </label>
                       <Select
                         name="mopol"
@@ -251,7 +332,7 @@ const CarRent = () => {
                         name="phone"
                         value={formData.phone}
                         onChange={handleChange}
-                        className="rounded-full bg-transparent w-full border-[#C19D60] outline-none border-opacity-5 border p-2"
+                        className="w-full p-3 rounded-lg mt-2 bg-[#2c2c2c] border outline-none border-gray-600"
                         required
                       />
                     </div>
@@ -268,11 +349,27 @@ const CarRent = () => {
                           name="day"
                           value={formData.day}
                           onChange={handleChange}
-                          className="rounded-full bg-transparent w-full border-[#C19D60] outline-none border-opacity-5 border p-2"
+                          className="w-full p-3 rounded-lg mt-2 bg-[#2c2c2c] border outline-none border-gray-600"
                           required
                         />
                       </div>
 
+                      {formData.hours > 24 && (
+                        <div className="flex flex-col gap-2 w-full mt-4">
+                          <label htmlFor="endDate" className="text-sm">
+                            End Date
+                          </label>
+                          <input
+                            type="date"
+                            id="endDate"
+                            name="endDate"
+                            value={endDate}
+                            onChange={(e) => setEndDate(e.target.value)}
+                            className="w-full p-3 rounded-lg mt-2 bg-[#2c2c2c] border outline-none border-gray-600"
+                            required
+                          />
+                        </div>
+                      )}
                       <div className="flex flex-col gap-2 w-full ">
                         <label htmlFor="time" className="text-sm">
                           Time of Booking
@@ -283,7 +380,7 @@ const CarRent = () => {
                           name="time"
                           value={formData.time}
                           onChange={handleChange}
-                          className="rounded-full bg-transparent border-[#C19D60] outline-none border-opacity-5 border p-2"
+                          className="w-full p-3 rounded-lg mt-2 bg-[#2c2c2c] border outline-none border-gray-600"
                           required
                         />
                       </div>
@@ -300,6 +397,19 @@ const CarRent = () => {
                 </form>
               </div>
             </div>
+          </div>
+        )}
+        {calculatedPrice && carDetails && (
+          <div className="calculated-price">
+            <p>Car Name: {carDetails.name}</p>
+            <p>People: {carDetails.people}</p>
+            <img
+              src={`data:image/jpeg;base64,${carDetails.imgSrc}`}
+              alt={carDetails.name}
+            />
+            <p>Drive Type: {carDetails.driveType}</p>
+            <p>Start Date: {carDetails.day}</p>
+            <p>Total Price: {calculatedPrice}</p>
           </div>
         )}
       </div>

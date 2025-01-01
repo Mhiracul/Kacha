@@ -10,6 +10,8 @@ const AddCars = () => {
   const [type, setType] = useState("");
   const [price, setPrice] = useState("");
   const [details, setDetails] = useState("");
+  const [seats, setSeats] = useState("");
+  const [bags, setBags] = useState("");
   const [status, setStatus] = useState({
     value: "Available",
     label: "Available",
@@ -34,6 +36,7 @@ const AddCars = () => {
     { value: "Available", label: "Available" },
     { value: "Sold Out", label: "Sold Out" },
   ];
+
   const customStyles = {
     control: (provided) => ({
       ...provided,
@@ -105,6 +108,8 @@ const AddCars = () => {
         type: type.value,
         price,
         details,
+        seats,
+        bags,
         status: status.value,
         imgSrc,
       }),
@@ -180,6 +185,26 @@ const AddCars = () => {
                 value={details}
                 onChange={(e) => setDetails(e.target.value)}
                 className="form-control p-3 outline-none text-white mt-3 bg-[#0f172a] border border-gray-300 shadow-md w-full"
+                required
+              />
+
+              <label className="text-slate-300 font-medium mt-4">Seats</label>
+              <input
+                type="number"
+                placeholder="Number of Seats"
+                value={seats}
+                onChange={(e) => setSeats(e.target.value)}
+                className="form-control p-3 pl-14 outline-none text-white mt-3 bg-[#0f172a] border border-gray-300 shadow-md w-full"
+                required
+              />
+
+              <label className="text-slate-300 font-medium mt-4">Bags</label>
+              <input
+                type="number"
+                placeholder="Number of Bags"
+                value={bags}
+                onChange={(e) => setBags(e.target.value)}
+                className="form-control p-3 pl-14 outline-none text-white mt-3 bg-[#0f172a] border border-gray-300 shadow-md w-full"
                 required
               />
 

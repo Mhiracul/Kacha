@@ -40,7 +40,7 @@ const CarRentSection = () => {
             </a>
 
             <a
-              href=""
+              href="/car-rentals"
               className="bg-transparent border border-[#fff] inline-flex gap-1 font-light items-center text-[#fff] hover:bg-[#f5b754] hover:text-black text-base font-outfit px-6 py-3 rounded-full transition-all"
               target="_self"
               rel="noopener noreferrer"

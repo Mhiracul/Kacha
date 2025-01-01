@@ -1,50 +1,44 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios"; // Import axios for API requests
+import axios from "axios";
 
 const CarGrids = () => {
-  const [cars, setCars] = useState([]); // State to store car data
+  const [cars, setCars] = useState([]);
   const [selectedType, setSelectedType] = useState("All");
   const [visibleCarsCount, setVisibleCarsCount] = useState(4);
 
-  // Fetch car data from backend
   useEffect(() => {
     const fetchCars = async () => {
       try {
         const response = await axios.get(
           "https://kachabackend.onrender.com/api/cars"
-        ); // Adjust the API endpoint accordingly
-        setCars(response.data); // Set the fetched car data to state
+        );
+        setCars(response.data);
       } catch (error) {
         console.error("Error fetching car data:", error);
       }
     };
 
-    fetchCars(); // Call the function to fetch car data
+    fetchCars();
   }, []);
 
-  // Filter cars based on selected type
   const filteredCars =
     selectedType === "All"
       ? cars
       : cars.filter((car) => car.type === selectedType);
 
-  // Car types for filtering
   const carTypes = ["All", "Benz", "Lexus", "Honda"];
 
-  // Handle "See More" functionality
   const handleSeeMore = () => {
-    setVisibleCarsCount(visibleCarsCount + 4); // Show 4 more cars on each click
+    setVisibleCarsCount(visibleCarsCount + 4);
   };
 
   return (
     <div className="bg-[#1b1b1b] w-full font-outfit text-white py-20">
       <div className="md:px-20 px-10">
-        {/* Section Title */}
         <div className="flex items-center flex-col gap-20 mb-12">
           <div className="bg-[#f5b754] w-[1px] h-16"></div>
         </div>
 
-        {/* Car Type Filter Buttons */}
         <div className="flex gap-2 justify-center mb-12">
           {carTypes.map((type) => (
             <button
@@ -59,10 +53,20 @@ const CarGrids = () => {
           ))}
         </div>
 
-        {/* Car Grid */}
         <div className="grid xl:grid-cols-2 lg:grid-cols-2 grid-cols-1 xl:gap-20 gap-20 md:px-20 py-20 px-0">
           {filteredCars.slice(0, visibleCarsCount).map((car) => (
             <div key={car.id} className="relative">
+              {/* Car Status Badge */}
+              <div
+                className={`absolute top-2 right-2 text-xs font-semibold px-3 py-1 rounded-full ${
+                  car.status === "Available"
+                    ? "bg-green-500 text-white"
+                    : "bg-red-500 text-white"
+                }`}
+              >
+                {car.status}
+              </div>
+              {/* Car Image */}
               <img
                 src={`data:image/${
                   car.imgSrc.includes("png") ? "png" : "jpeg"
@@ -80,16 +84,6 @@ const CarGrids = () => {
                     </div>
                     <div className="text-gray-300 md:text-sm text-xs mb-2">
                       {car.details}
-                    </div>
-                    {/* Display car status */}
-                    <div
-                      className={`text-sm font-semibold ${
-                        car.status === "Available"
-                          ? "text-green-500"
-                          : "text-red-500"
-                      }`}
-                    >
-                      {car.status} {/* Show Available or Sold Out */}
                     </div>
                   </div>
                   <div className="flex md:flex-row flex-row-reverse gap-4 items-center md:items-center">
@@ -111,7 +105,6 @@ const CarGrids = () => {
           ))}
         </div>
 
-        {/* See More Button */}
         {filteredCars.length > visibleCarsCount && (
           <div className="flex justify-center mt-20">
             <button

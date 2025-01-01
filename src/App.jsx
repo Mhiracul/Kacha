@@ -17,6 +17,8 @@ import { useEffect, useState } from "react";
 import Loader from "./Loader";
 import EditCar from "./Admin/Page/EditCar";
 import AddCarRent from "./Admin/Page/AddCarRent";
+import ConfirmationPage from "./Pages/ConfirmationPage";
+import AdminBookings from "./Admin/Page/AdminBooking";
 
 const getToken = () => localStorage.getItem("adminToken");
 
@@ -60,6 +62,8 @@ function App() {
           <Route path="/car-details/:carName" element={<CarDetails />} />
           <Route path="/edit-car" element={<EditCar />} />
           <Route path="/add-car-rent" element={<AddCarRent />} />
+          <Route path="/confirmation" element={<ConfirmationPage />} />
+          <Route path="/rentals-booking" element={<AdminBookings />} />
         </Routes>
       )}
     </Router>

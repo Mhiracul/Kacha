@@ -159,15 +159,7 @@ const Footer = () => {
                   Cars
                 </a>
               </li>
-              <li>
-                <a
-                  href="pricing-plan"
-                  className="hover:underline inline-flex items-center gap-[0.4px]"
-                >
-                  <LuDot className="text-[#f5b754] text-3xl" />
-                  Pricing
-                </a>
-              </li>
+
               <li>
                 <a
                   href="/FAQ"

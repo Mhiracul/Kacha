@@ -65,7 +65,7 @@ const About = () => {
           {/* Read More Button */}
           <div className="mt-6">
             <a
-              href=""
+              href="/about"
               className="bg-[#f5b754] inline-flex gap-1  items-center text-black font-normal text-xs font-outfit md:px-10 md:py-5 px-6 py-3 rounded-full transition-all hover:bg-yellow-600"
               target="_self"
               rel="noopener noreferrer"
