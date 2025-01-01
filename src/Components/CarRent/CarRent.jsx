@@ -71,7 +71,7 @@ const CarRent = () => {
   const calculateTotalPrice = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/rentals/price",
+        "https://kachabackend.onrender.com/api/rentals/price",
         {
           carId: selectedCar._id,
           hours: parseInt(formData.hours),

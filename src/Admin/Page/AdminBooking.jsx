@@ -9,7 +9,7 @@ const AdminBookings = () => {
   useEffect(() => {
     // Fetch all bookings
     axios
-      .get("http://localhost:5000/api/bookings")
+      .get("https://kachabackend.onrender.com/api/bookings")
       .then((response) => setBookings(response.data))
       .catch((error) => {
         console.error("Error fetching bookings:", error);
@@ -20,7 +20,9 @@ const AdminBookings = () => {
   const handleApprove = (bookingId) => {
     // Approve the booking
     axios
-      .put(`http://localhost:5000/api/bookings/${bookingId}/approve`)
+      .put(
+        `https://kachabackend.onrender.com/api/bookings/${bookingId}/approve`
+      )
       .then((response) => {
         toast.success(response.data.message);
         setBookings(bookings.filter((booking) => booking._id !== bookingId));

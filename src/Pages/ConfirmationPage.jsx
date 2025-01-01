@@ -83,7 +83,7 @@ const ConfirmationPage = () => {
 
       // Now submit the booking data to the server
       const response = await axios.post(
-        "http://localhost:5000/api/bookings",
+        "https://kachabackend.onrender.com/api/bookings",
         updatedBookingData
       );
 
