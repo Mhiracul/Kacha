@@ -62,12 +62,6 @@ const Header = () => {
                 >
                   Car Repaint
                 </Link>
-                <Link
-                  to="/car-details"
-                  className="block py-1 hover:text-[#f5b754]"
-                >
-                  Car Details
-                </Link>
               </div>
             )}
           </div>
@@ -157,12 +151,6 @@ const Header = () => {
                   className="block py-1 hover:text-[#f5b754]"
                 >
                   Car Repaint
-                </Link>
-                <Link
-                  to="/car-details"
-                  className="block py-1 hover:text-[#f5b754]"
-                >
-                  Car Details
                 </Link>
               </div>
             )}

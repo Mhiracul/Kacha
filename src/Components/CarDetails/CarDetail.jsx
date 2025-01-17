@@ -4,10 +4,12 @@ import Banner from "./Banner"; // Assuming Banner is in the same folder
 import { FaWhatsapp } from "react-icons/fa";
 import Car1 from "../../assets/car-carousel1.png";
 import { HiUser } from "react-icons/hi";
+import Loader from "../../Loader";
 
 const CarDetail = () => {
   const { carName } = useParams(); // Get car name from URL parameter
   const [car, setCar] = useState(null);
+  const [loading, setLoading] = useState(true); // Track loading state
 
   useEffect(() => {
     // Fetch car details based on the carName parameter
@@ -24,11 +26,17 @@ const CarDetail = () => {
         setCar(selectedCar);
       } catch (error) {
         console.error("Failed to fetch car details:", error);
+      } finally {
+        setLoading(false); // Set loading to false when fetch is complete
       }
     };
 
     fetchCarDetails();
   }, [carName]);
+
+  if (loading) {
+    return <Loader />;
+  }
 
   if (!car) {
     return <div>Car not found</div>;
