@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const CarGrids = () => {
   const [cars, setCars] = useState([]);
@@ -77,23 +78,25 @@ const CarGrids = () => {
               <div className="absolute mx-auto md:-bottom-16 -bottom-20 max-w-lg rounded-2xl left-0 right-0 bg-[#222] px-4 py-2">
                 <div className="flex md:flex-row flex-col justify-between items-start md:items-center">
                   <div>
-                    <div className="text-white md:text-lg text-sm md:font-semibold font-medium mb-2">
+                    <div className="text-white md:text-lg capitalize cursor-pointer text-sm md:font-semibold font-medium mb-2">
                       <a href="#" className="hover:underline">
                         {car.name}
                       </a>
                     </div>
-                    <div className="text-gray-300 md:text-sm text-xs mb-2">
-                      {car.details}
+                    <div className="text-gray-300 cursor-pointer capitalize md:text-sm text-xs mb-2">
+                      {car.type}
                     </div>
                   </div>
                   <div className="flex md:flex-row flex-row-reverse gap-4 items-center md:items-center">
-                    <a
-                      href="#"
+                    <Link
+                      to={`/car-details/${car.name
+                        .toLowerCase()
+                        .replace(/\s+/g, "-")}`}
                       className="block text-sm w-full text-center bg-yellow-500 text-black rounded-full py-2 px-4 hover:bg-yellow-600"
                     >
                       Details
-                    </a>
-                    <div className="items-center">
+                    </Link>
+                    <div className="items-center cursor-pointer">
                       <span className="text-[#f5b754] md:text-lg text-sm font-semibold">
                         ₦{car.price.toLocaleString()}
                       </span>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import { MdOutlineDriveFileRenameOutline } from "react-icons/md";
 import DefaultLayout from "../../adminlayout/DefaultLayout";
+import { toast, Toaster } from "react-hot-toast";
 
 const getToken = () => localStorage.getItem("adminToken");
 
@@ -12,6 +13,7 @@ const AddCars = () => {
   const [details, setDetails] = useState("");
   const [seats, setSeats] = useState("");
   const [bags, setBags] = useState("");
+  const [additionalImages, setAdditionalImages] = useState([]);
   const [status, setStatus] = useState({
     value: "Available",
     label: "Available",
@@ -92,6 +94,20 @@ const AddCars = () => {
       };
     }
   };
+  const handleAdditionalImagesChange = (e) => {
+    const files = Array.from(e.target.files);
+    const readers = files.map((file) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      return new Promise((resolve) => {
+        reader.onloadend = () => resolve(reader.result.split(",")[1]);
+      });
+    });
+
+    Promise.all(readers).then((images) => {
+      setAdditionalImages((prev) => [...prev, ...images]);
+    });
+  };
 
   const handleAddCar = async (e) => {
     e.preventDefault();
@@ -108,25 +124,41 @@ const AddCars = () => {
         type: type.value,
         price,
         details,
-        seats,
-        bags,
+        seat: seats, // Change to `seat`
+        Bags: bags, // Change to `Bags`
         status: status.value,
         imgSrc,
+        additionalImages,
       }),
     });
 
     const data = await response.json();
     if (response.ok) {
-      setMessage("Car added successfully!");
+      toast.success("Car added successfully!", {
+        position: "top-right",
+      });
       setCars((prevCars) => [...prevCars, data]);
+      // Reset form fields
+      setName("");
+      setType("");
+      setPrice("");
+      setDetails("");
+      setSeats("");
+      setBags("");
+      setAdditionalImages([]);
+      setImgSrc("");
+      setStatus({ value: "Available", label: "Available" });
     } else {
-      setMessage(data.msg || "Something went wrong");
+      toast.error(data.msg || "Something went wrong", {
+        position: "top-right",
+      });
     }
   };
 
   return (
     <div className="w-full font-roboto bg-black h-screen">
       <DefaultLayout>
+        <Toaster />
         <div className="grid grid-cols-12 gap-4 shadow-md shadow-[#272f4f] px-10 py-10 mt-10 rounded-md bg-black md:mt-6 md:gap-6">
           <div className="col-span-12 xl:col-span-4">
             <h1 className="text-[#1C5FCC] text-xl font-bold">Add New Car</h1>
@@ -236,6 +268,27 @@ const AddCars = () => {
                   width="100"
                 />
               )}
+
+              <label className="text-slate-300 font-medium mt-4">
+                Additional Images
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleAdditionalImagesChange}
+                className="form-control p-3 outline-none text-white mt-3 bg-[#0f172a] border border-gray-300 text-xs shadow-md w-full"
+              />
+              <div className="flex gap-4 mt-4">
+                {additionalImages.map((img, index) => (
+                  <img
+                    key={index}
+                    src={`data:image/png;base64,${img}`}
+                    alt={`Additional Preview ${index + 1}`}
+                    className="w-24 h-24"
+                  />
+                ))}
+              </div>
 
               <button
                 type="submit"
