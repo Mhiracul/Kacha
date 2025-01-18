@@ -109,7 +109,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                 </Link>
               </li>
 
-              <li className="mt-1.5 w-full">
+              {/*   <li className="mt-1.5 w-full">
                 <Link
                   className="py-2.7 text-sm font-semibold ease-nav-brand my-0 mx-4 flex items-center text-[#7e7e7e]  whitespace-nowrap px-4 transition-colors"
                   to="/traders"
@@ -121,7 +121,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                     Inspections
                   </span>
                 </Link>
-              </li>
+              </li> */}
 
               <li className="mt-1.5 w-full">
                 <Link
@@ -165,7 +165,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                 </Link>
               </li>
 
-              <li className="mt-1.5 w-full">
+              {/* <li className="mt-1.5 w-full">
                 <Link
                   className="py-2.7 text-sm font-semibold ease-nav-brand my-0 mx-4 flex items-center text-[#7e7e7e]  whitespace-nowrap px-4 transition-colors"
                   to="/pending-requests"
@@ -177,7 +177,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                     Car Rentals
                   </span>
                 </Link>
-              </li>
+              </li> */}
 
               <li className="mt-0.5 w-full cursor-pointer" onClick="">
                 <div className="py-2.7 text-sm font-semibold ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors">

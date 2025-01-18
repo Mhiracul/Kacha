@@ -145,3 +145,6 @@ input[type="date"].no-date-icon {
   background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
   z-index: 1000;
 }
+.custom-toast-container {
+  z-index: 9999; /* Set your desired z-index */
+}
