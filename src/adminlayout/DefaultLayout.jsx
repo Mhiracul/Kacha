@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import RingLoader from "react-spinners/RingLoader";
 import Sidebar from "../Admin/Components/Dashboard/Sidebar";
 import Header from "../Admin/Components/Dashboard/Header";
+import Loader from "../Loader";
 
 const DefaultLayout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -23,14 +24,8 @@ const DefaultLayout = ({ children }) => {
       <div className="  relative">
         {/* <!-- ===== Page Wrapper Start ===== --> */}
         {isLoading ? (
-          <div className="flex items-center justify-center h-screen">
-            <RingLoader
-              color="fuchsia"
-              height={35}
-              width={4}
-              radius={2}
-              margin={2}
-            />
+          <div className=" h-screen">
+            <Loader />
           </div>
         ) : (
           <div className="flex h-screen overflow-hidden">

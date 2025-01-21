@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import { MdOutlineDriveFileRenameOutline } from "react-icons/md";
+import Swal from "sweetalert2";
 import DefaultLayout from "../../adminlayout/DefaultLayout";
-import { toast, Toaster } from "react-hot-toast";
 
 const getToken = () => localStorage.getItem("adminToken");
 
@@ -19,7 +19,6 @@ const AddCars = () => {
     label: "Available",
   });
   const [imgSrc, setImgSrc] = useState("");
-  const [message, setMessage] = useState("");
   const [cars, setCars] = useState([]);
 
   const carTypes = [
@@ -94,6 +93,7 @@ const AddCars = () => {
       };
     }
   };
+
   const handleAdditionalImagesChange = (e) => {
     const files = Array.from(e.target.files);
     const readers = files.map((file) => {
@@ -124,8 +124,8 @@ const AddCars = () => {
         type: type.value,
         price,
         details,
-        seat: seats, // Change to `seat`
-        Bags: bags, // Change to `Bags`
+        seat: seats,
+        Bags: bags,
         status: status.value,
         imgSrc,
         additionalImages,
@@ -134,9 +134,14 @@ const AddCars = () => {
 
     const data = await response.json();
     if (response.ok) {
-      toast.success("Car added successfully!", {
-        position: "top-right",
+      Swal.fire({
+        icon: "success",
+        title: "Car added successfully!",
+        text: `The car "${name}" has been added to the inventory.`,
+        timer: 3000,
+        showConfirmButton: false,
       });
+
       setCars((prevCars) => [...prevCars, data]);
       // Reset form fields
       setName("");
@@ -149,8 +154,10 @@ const AddCars = () => {
       setImgSrc("");
       setStatus({ value: "Available", label: "Available" });
     } else {
-      toast.error(data.msg || "Something went wrong", {
-        position: "top-right",
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: data.msg || "Something went wrong",
       });
     }
   };
@@ -158,7 +165,6 @@ const AddCars = () => {
   return (
     <div className="w-full font-roboto bg-black h-screen">
       <DefaultLayout>
-        <Toaster />
         <div className="grid grid-cols-12 gap-4 shadow-md shadow-[#272f4f] px-10 py-10 mt-10 rounded-md bg-black md:mt-6 md:gap-6">
           <div className="col-span-12 xl:col-span-4">
             <h1 className="text-[#1C5FCC] text-xl font-bold">Add New Car</h1>
@@ -297,7 +303,6 @@ const AddCars = () => {
                 Add Car
               </button>
             </form>
-            {message && <p className="text-green-500 mt-4">{message}</p>}
           </div>
         </div>
       </DefaultLayout>
