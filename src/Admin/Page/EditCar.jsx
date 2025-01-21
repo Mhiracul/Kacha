@@ -46,7 +46,7 @@ const EditCar = () => {
     if (selectedCar) {
       try {
         const response = await axios.put(
-          `https://kachabackend.onrender.com/api/cars/${selectedCar._id}`,
+          `https://kachabackend.onrender.com/api/carss/${selectedCar._id}`,
           editedDetails
         );
         // Update the car list after successful edit
