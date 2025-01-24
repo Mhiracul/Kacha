@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { FaWhatsapp } from "react-icons/fa";
 import Select from "react-select";
-import { jsPDF } from "jspdf";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
+import dayjs from "dayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import { HiUser } from "react-icons/hi";
 
 const CarRent = () => {
   const [visibleCarsCount, setVisibleCarsCount] = useState(4);
@@ -11,18 +16,19 @@ const CarRent = () => {
   const [selectedCar, setSelectedCar] = useState(null);
   const [endDate, setEndDate] = useState("");
   const [cars, setCars] = useState([]);
+  const [selectedType, setSelectedType] = useState("Driver");
+
   const [formData, setFormData] = useState({
     name: "",
     location: "",
-    time: "",
-    day: "",
+    time: dayjs().format("HH:mm"),
+    startDate: dayjs(), // Default to today's date
+    endDate: dayjs(),
     phone: "",
     carType: "",
     mopol: "Without Mopol",
     hours: "12",
   });
-  const [suggestions, setSuggestions] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [calculatedPrice, setCalculatedPrice] = useState(null); // New state to store the calculated price
   const [carDetails, setCarDetails] = useState(null);
 
@@ -37,7 +43,24 @@ const CarRent = () => {
     { value: "48", label: "48 Hours" },
     { value: "72", label: "72 Hours" },
   ];
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [isStartDateOpen, setIsStartDateOpen] = useState(false);
+  const [isEndDateOpen, setIsEndDateOpen] = useState(false);
+  const [isTimeOpen, setIsTimeOpen] = useState(false);
 
+  const handleDateChange = (field, newDate) => {
+    setFormData({
+      ...formData,
+      [field]: newDate,
+    });
+  };
+  const handleTimeChange = (newTime) => {
+    setFormData({
+      ...formData,
+      time: newTime.format("HH:mm"),
+    });
+  };
   useEffect(() => {
     axios
       .get("https://kachabackend.onrender.com/api/rentals")
@@ -57,12 +80,6 @@ const CarRent = () => {
       setEndDate(""); // Clear end date when hours change
     }
   };
-
-  const handleSuggestionClick = (suggestion) => {
-    setFormData({ ...formData, location: suggestion.address.label });
-    setSuggestions([]);
-  };
-
   const handleCarClick = (car) => {
     setSelectedCar(car);
     setFormData({ ...formData, carType: car.name });
@@ -88,10 +105,8 @@ const CarRent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     // Wait for the price calculation
     await calculateTotalPrice();
-
     // Navigate after calculatedPrice is updated
     if (calculatedPrice) {
       navigate("/confirmation", {
@@ -100,32 +115,14 @@ const CarRent = () => {
           totalPrice: calculatedPrice,
           formData,
           carDetails,
-          day: formData.day,
+          startDate: formData.startDate,
+          endDate: formData.endDate,
           pickupLocation: formData.pickupLocation,
-          destination: formData.destination, // Pass other details as needed
+          dropoffLocation: formData.dropoffLocation, // Pass other details as needed
         },
       });
     }
   };
-
-  const generatePDF = () => {
-    const doc = new jsPDF();
-    doc.setFontSize(20);
-    doc.text("Appointment Details", 20, 20);
-
-    doc.setFontSize(14);
-    doc.text(`Name: ${formData.name}`, 20, 30);
-    doc.text(`Location: ${formData.location}`, 20, 40);
-    doc.text(`Time: ${formData.time}`, 20, 50);
-    doc.text(`Day: ${formData.day}`, 20, 60);
-    doc.text(`Phone: ${formData.phone}`, 20, 70);
-    doc.text(`Car Type: ${formData.carType}`, 20, 80);
-
-    const pdfOutput = doc.output("bloburl");
-    const whatsappLink = `https://api.whatsapp.com/send?phone=+2348124985138&text=Appointment%20Details%0A%0AName:%20${formData.name}%0ALocation:%20${formData.location}%0ATime:%20${formData.time}%0ADay:%20${formData.day}%0APhone:%20${formData.phone}%0ACar%20Type:%20${formData.carType}%0A%0APDF%20Link:%20${pdfOutput}`;
-    window.open(whatsappLink, "_blank");
-  };
-
   const handleSeeMore = () => {
     setVisibleCarsCount(visibleCarsCount + 4);
   };
@@ -158,6 +155,16 @@ const CarRent = () => {
       color: "#fff",
     }),
   };
+  const carTypes = ["Driver", "Self Drive"];
+  const handleImageClick = (image) => {
+    setSelectedImage(image);
+    setModalVisible(true);
+  };
+
+  const closeModall = () => {
+    setModalVisible(false);
+    setSelectedImage(null);
+  };
 
   return (
     <div className="bg-[#1b1b1b] w-full font-outfit   text-white py-20">
@@ -177,35 +184,120 @@ const CarRent = () => {
             provide you with the details on WhatsApp, where you can finalize the
             payment and booking.
           </p>
+
+          <p className="text-[#7a7a7a] max-w-2xl mt-4 font-extralight text-sm font-outfit">
+            Note: Customers should ensure all bookings are done 30-45 mins
+            before pickup time Extra time on daily rental attracts extra
+            charges. (i.e., exceeding 8pm drop-off time) Impromptu stops on
+            airport fares attracts extra charges. Number of riders should not
+            exceed the designated number of seats available in the car as this
+            could lead to automatic trip cancellation.
+          </p>
+        </div>
+
+        <div className="flex gap-2 justify-center mb-12">
+          {carTypes.map((type) => (
+            <button
+              key={type}
+              className={`text-white capitalize text-xs px-4 py-2 rounded-full ${
+                selectedType === type ? "bg-[#f5b754]" : "bg-gray-600"
+              }`}
+              onClick={() => setSelectedType(type)}
+            >
+              {type}
+            </button>
+          ))}
         </div>
         {/* Car Grid */}
-        <div className="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 xl:gap-20 gap-20">
-          {cars.slice(0, visibleCarsCount).map((car) => (
-            <div
-              key={car.id}
-              className="relative cursor-pointer group"
-              onClick={() => handleCarClick(car)}
-            >
-              <img
-                src={`data:image/${
-                  car.imgSrc.includes("png") ? "png" : "jpeg"
-                };base64,${car.imgSrc}`}
-                alt={car.name}
-                className="rounded-3xl xl:h-60 lg:h-60 h-60 w-full object-fit object-center group-hover:opacity-80 group-hover:scale-105 transition duration-300 ease-in-out"
-              />
-              <div className="absolute mx-auto -bottom-10 max-w-lg rounded-2xl left-0 right-0 bg-[#222] p-4">
-                <div className="flex md:flex-row flex-col justify-between items-start md:items-center">
-                  <div>
-                    <div className="text-white md:text-lg text-sm md:font-semibold font-medium mb-2">
-                      <a href="#" className="hover:underline">
+
+        <div className="grid xl:grid-cols-2 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 grid-cols-1 xl:gap-20 gap-20">
+          {cars
+            .filter((car) => car.driveType === selectedType) // Filter cars by selected type
+            .slice(0, visibleCarsCount) // Limit to visible cars
+            .map((car, index) => (
+              <div key={car.id} className="relative cursor-pointer group">
+                <div className="flex ">
+                  {/* Log the image source to check its value */}
+                  {console.log(car.imgSrc)}
+
+                  {/* Large Image */}
+
+                  {car.imgSrc && car.imgSrc.length > 0 && (
+                    <>
+                      <div className="flex-shrink-0 w-3/4 mr-4">
+                        <img
+                          src={`data:image/jpeg;base64,${car.imgSrc[0]}`}
+                          alt={car.name}
+                          className=" h-96 w-full object-cover group-hover:opacity-80 group-hover:scale-105 transition duration-300 ease-in-out"
+                          onClick={() => handleCarClick(car)}
+                        />
+                      </div>
+
+                      {/* Smaller Images */}
+
+                      <div className=" gap-6 flex-shrink-0  w-1/4">
+                        <div className="relative group">
+                          {car.imgSrc.slice(1).map((imageSrc, index) => (
+                            <img
+                              src={`data:image/jpeg;base64,${imageSrc}`}
+                              alt={`Car image ${index + 1}`}
+                              className=" h-32 w-full object-cover  group-hover:opacity-80 group-hover:scale-105 transition duration-300 ease-in-out"
+                              onClick={() =>
+                                handleImageClick(
+                                  `data:image/jpeg;base64,${imageSrc}`
+                                )
+                              }
+                            />
+                          ))}
+                        </div>
+                        <span className="absolute top-2 -right-2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                          Click to view <br /> the full image
+                        </span>
+                      </div>
+                    </>
+                  )}
+                </div>
+                <div
+                  className=" mx-auto -bottom-12 rounded-2xl left-0 right-0 bg-[#222]  px-4 py-2"
+                  onClick={() => handleCarClick(car)}
+                >
+                  <div className="">
+                    <div className="text-white md:text-lg text-sm md:font-semibold font-medium mb-1">
+                      <p
+                        className="hover:underline"
+                        onClick={() => handleCarClick(car)}
+                      >
                         {car.name}
-                      </a>
+                      </p>
+                      <div className="flex md:flex-row mt-1 flex-row justify-between items-center">
+                        <p className="text-[#f5b754] text-sm font-medium flex-grow">
+                          <span className="text-white"></span> ₦
+                          {car.price.toLocaleString()}
+                        </p>
+                        <p className="text-xs  font-extralight">12hrs</p>{" "}
+                        {/* This will now be aligned to the right */}
+                      </div>
+                      <div className="flex md:flex-row mt-1 flex-row justify-between items-center">
+                        <p className="text-[#f5b754] text-sm font-medium flex-grow">
+                          <span className="text-white"> </span> ₦
+                          {car.twentyFourHoursPrice.toLocaleString()}
+                        </p>
+                        <p className="text-xs  font-extralight">24hrs</p>{" "}
+                        {/* This will now be aligned to the right */}
+                      </div>
+
+                      <div className="flex md:flex-row mt-1 flex-row justify-between items-center">
+                        <HiUser className="text-[#f5b754]" />
+                        <p className="text-xs  font-extralight">
+                          {car.people} persons
+                        </p>{" "}
+                        {/* This will now be aligned to the right */}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
 
         {/* See More Button */}
@@ -250,10 +342,10 @@ const CarRent = () => {
                         value={formData.name}
                         onChange={handleChange}
                         className="w-full p-3 rounded-lg mt-2 bg-[#2c2c2c] border outline-none border-gray-600"
+                        placeholder="Enter Full Name"
                         required
                       />
                     </div>
-
                     {/* Pick Up Location */}
                     <div className="mb-4">
                       <label className="text-white text-sm">
@@ -268,21 +360,21 @@ const CarRent = () => {
                         placeholder="Enter pick up location"
                       />
                     </div>
-
-                    <div className="mb-4">
-                      <label className="text-white text-sm">Destination</label>
+                    <div className="mb-2">
+                      <label className="text-white text-sm">
+                        Drop-Off Location
+                      </label>
                       <input
                         type="text"
-                        name="destination"
+                        name="dropofflocation"
                         className="w-full p-3 rounded-lg mt-2 bg-[#2c2c2c] border outline-none border-gray-600"
-                        value={formData.destination}
+                        value={formData.dropofflocation}
                         onChange={handleChange}
-                        placeholder="Enter destination"
+                        placeholder="Enter drop-off Location"
                       />
                     </div>
-
                     <div className="flex flex-col gap-2 w-full">
-                      <label htmlFor="hours" className="text-sm mt-4">
+                      <label htmlFor="hours" className="text-sm mt-2">
                         Hours
                       </label>
                       <Select
@@ -300,9 +392,123 @@ const CarRent = () => {
                         }
                       />
                     </div>
-                    {/* Duration (Hours) */}
 
-                    {/* Mopol Option */}
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <div className=" gap-4">
+                        {/* Start Date */}
+                        <div
+                          className="flex flex-col gap-2  relative"
+                          onMouseEnter={() => setIsStartDateOpen(true)}
+                          onMouseLeave={() => setIsStartDateOpen(false)}
+                        >
+                          <label className="text-sm text-white">
+                            Start Date
+                          </label>
+                          <input
+                            type="text"
+                            value={formData.startDate.format("DD-MM-YYYY")}
+                            onClick={() => setIsStartDateOpen(true)}
+                            readOnly
+                            className="w-full p-3 rounded-lg mt-2 bg-[#2c2c2c] border outline-none border-gray-600"
+                          />
+                          {isStartDateOpen && (
+                            <div className="absolute z-50 bg-[#2c2c2c] border border-gray-600 p-2 rounded-lg mt-1 md:w-1/2 w-full">
+                              <DateCalendar
+                                value={formData.startDate}
+                                onChange={(newDate) => {
+                                  handleDateChange("startDate", newDate);
+                                  setIsStartDateOpen(false);
+                                }}
+                                sx={{
+                                  "& .MuiDayPicker-day": {
+                                    color: "white",
+                                  },
+                                  "& .MuiPickersDay-today": {
+                                    borderColor: "white",
+                                    color: "white",
+                                  },
+                                  "& .MuiPickersDay-root": {
+                                    color: "white",
+                                  },
+                                }}
+                              />
+                            </div>
+                          )}
+                        </div>
+
+                        {/* End Date */}
+                        <div
+                          className="flex flex-col gap-2  relative"
+                          onMouseEnter={() => setIsEndDateOpen(true)}
+                          onMouseLeave={() => setIsEndDateOpen(false)}
+                        >
+                          <label className="text-sm text-white">End Date</label>
+                          <input
+                            type="text"
+                            value={formData.endDate.format("DD-MM-YYYY")}
+                            readOnly
+                            className="w-full p-3 rounded-lg mt-2 bg-[#2c2c2c] border outline-none border-gray-600"
+                          />
+                          {isEndDateOpen && (
+                            <div className="absolute z-50 bg-[#2c2c2c] border border-gray-600 p-2 rounded-lg mt-1 md:w-1/2 w-full">
+                              <DateCalendar
+                                value={formData.endDate}
+                                onChange={(newDate) => {
+                                  handleDateChange("endDate", newDate);
+                                  setIsEndDateOpen(false);
+                                }}
+                                sx={{
+                                  "& .MuiDayPicker-day": {
+                                    color: "white",
+                                  },
+                                  "& .MuiPickersDay-today": {
+                                    borderColor: "white",
+                                    color: "white",
+                                  },
+                                  "& .MuiPickersDay-root": {
+                                    color: "white",
+                                  },
+                                }}
+                              />
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      {/* Time Picker */}
+                      <div className="flex flex-wrap gap-4">
+                        {/* Time Picker */}
+                        {/* Time Picker */}
+                        <div
+                          className="flex flex-col gap-2 w-full  relative"
+                          onMouseEnter={() => setIsTimeOpen(true)}
+                          onMouseLeave={() => setIsTimeOpen(false)}
+                        >
+                          <label htmlFor="time" className="text-sm text-white">
+                            Time of Booking
+                          </label>
+                          <input
+                            type="text"
+                            value={formData.time || "Select Time"} // Display selected time or placeholder
+                            readOnly
+                            className="w-full p-3 rounded-lg mt-2 bg-[#2c2c2c] border outline-none border-gray-600 cursor-pointer"
+                          />
+                          {isTimeOpen && (
+                            <div className="absolute z-50 top-0 right-10 bg-[#2c2c2c] text-white border border-gray-600 p-1 rounded-lg mt-1 w-full max-w-xs">
+                              <TimePicker
+                                value={dayjs(formData.time, "HH:mm")} // Parse the time value for display
+                                onChange={(newTime) => {
+                                  handleTimeChange(newTime); // Update the time in the formData
+                                  setIsTimeOpen(false); // Close the picker
+                                }}
+                                ampm={false} // Use 24-hour format
+                                renderInput={() => null} // Prevent rendering an additional input
+                              />
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </LocalizationProvider>
+
                     <div className="flex flex-col gap-2 w-full">
                       <label htmlFor="mopol" className="text-sm mt-4">
                         Security Personnel
@@ -320,7 +526,6 @@ const CarRent = () => {
                         className="rounded-full text-black"
                       />
                     </div>
-
                     {/* Phone Number */}
                     <div className="flex flex-col gap-2">
                       <label htmlFor="phone" className="text-sm">
@@ -333,57 +538,9 @@ const CarRent = () => {
                         value={formData.phone}
                         onChange={handleChange}
                         className="w-full p-3 rounded-lg mt-2 bg-[#2c2c2c] border outline-none border-gray-600"
+                        placeholder="Enter Phone Number"
                         required
                       />
-                    </div>
-
-                    {/* Date and Time */}
-                    <div className="flex flex-wrap gap-4">
-                      <div className="flex flex-col gap-2 w-full ">
-                        <label htmlFor="day" className="text-sm">
-                          Start Date
-                        </label>
-                        <input
-                          type="date"
-                          id="day"
-                          name="day"
-                          value={formData.day}
-                          onChange={handleChange}
-                          className="w-full p-3 rounded-lg mt-2 bg-[#2c2c2c] border outline-none border-gray-600"
-                          required
-                        />
-                      </div>
-
-                      {formData.hours > 24 && (
-                        <div className="flex flex-col gap-2 w-full mt-4">
-                          <label htmlFor="endDate" className="text-sm">
-                            End Date
-                          </label>
-                          <input
-                            type="date"
-                            id="endDate"
-                            name="endDate"
-                            value={endDate}
-                            onChange={(e) => setEndDate(e.target.value)}
-                            className="w-full p-3 rounded-lg mt-2 bg-[#2c2c2c] border outline-none border-gray-600"
-                            required
-                          />
-                        </div>
-                      )}
-                      <div className="flex flex-col gap-2 w-full ">
-                        <label htmlFor="time" className="text-sm">
-                          Time of Booking
-                        </label>
-                        <input
-                          type="time"
-                          id="time"
-                          name="time"
-                          value={formData.time}
-                          onChange={handleChange}
-                          className="w-full p-3 rounded-lg mt-2 bg-[#2c2c2c] border outline-none border-gray-600"
-                          required
-                        />
-                      </div>
                     </div>
 
                     <button
@@ -410,6 +567,26 @@ const CarRent = () => {
             <p>Drive Type: {carDetails.driveType}</p>
             <p>Start Date: {carDetails.day}</p>
             <p>Total Price: {calculatedPrice}</p>
+          </div>
+        )}
+
+        {modalVisible && (
+          <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+            <div className="relative bg-white rounded-lg p-4 max-w-4xl">
+              <button
+                className="absolute top-2 right-2 text-black text-xl font-bold"
+                onClick={closeModall}
+              >
+                ×
+              </button>
+              {selectedImage && (
+                <img
+                  src={selectedImage}
+                  alt="Selected"
+                  className="w-full h-auto rounded-lg"
+                />
+              )}
+            </div>
           </div>
         )}
       </div>

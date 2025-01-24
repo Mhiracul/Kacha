@@ -8,11 +8,12 @@ const AddCarRent = () => {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [people, setPeople] = useState("");
+  const [twentyFourHoursPrice, setTwentyFourHoursPrice] = useState("");
   const [driveType, setDriveType] = useState({
     value: "Self Drive",
     label: "Self Drive",
   });
-  const [imgSrc, setImgSrc] = useState("");
+  const [imgSrc, setImgSrc] = useState([]);
   const [message, setMessage] = useState("");
 
   const driveOptions = [
@@ -43,16 +44,19 @@ const AddCarRent = () => {
       color: "white",
     }),
   };
-
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
+    const files = Array.from(e.target.files);
+    const readers = files.map((file) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
-      reader.onloadend = () => {
-        setImgSrc(reader.result.split(",")[1]);
-      };
-    }
+      return new Promise((resolve) => {
+        reader.onloadend = () => resolve(reader.result.split(",")[1]);
+      });
+    });
+
+    Promise.all(readers).then((images) => {
+      setImgSrc((prev) => [...prev, ...images]);
+    });
   };
 
   const handleAddCarRent = async (e) => {
@@ -72,7 +76,8 @@ const AddCarRent = () => {
             price,
             people,
             driveType: driveType.value,
-            imgSrc,
+            twentyFourHoursPrice,
+            imgSrc: imgSrc,
           }),
         }
       );
@@ -83,16 +88,17 @@ const AddCarRent = () => {
         setName("");
         setPrice("");
         setPeople("");
+        setTwentyFourHoursPrice("");
         setDriveType({ value: "Self Drive", label: "Self Drive" });
-        setImgSrc("");
+        setImgSrc([]);
       } else {
         setMessage(data.msg || "Error adding car for rent");
       }
     } catch (error) {
+      console.error("Error during submission:", error);
       setMessage("An error occurred. Please try again.");
     }
   };
-
   return (
     <div className="w-full font-roboto bg-black h-screen">
       <DefaultLayout>
@@ -138,7 +144,19 @@ const AddCarRent = () => {
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
                 className="form-control p-3 mt-3 bg-[#0f172a] text-white w-full border border-gray-300 rounded"
-                placeholder="Enter price"
+                placeholder="Enter 12hours price"
+                required
+              />
+
+              <label className="text-slate-300 font-medium mt-4">
+                Price Per 24 Hours
+              </label>
+              <input
+                type="number"
+                value={twentyFourHoursPrice}
+                onChange={(e) => setTwentyFourHoursPrice(e.target.value)}
+                className="form-control p-3 mt-3 bg-[#0f172a] text-white w-full border border-gray-300 rounded"
+                placeholder="Enter 24hours price"
                 required
               />
 
@@ -159,19 +177,23 @@ const AddCarRent = () => {
               <input
                 type="file"
                 accept="image/*"
+                multiple
                 onChange={handleImageChange}
                 className="form-control p-3 mt-3 bg-[#0f172a] text-white w-full border border-gray-300 rounded"
                 required
               />
 
-              {imgSrc && (
-                <img
-                  src={`data:image/png;base64,${imgSrc}`}
-                  alt="Car Preview"
-                  className="mt-4"
-                  width="100"
-                />
-              )}
+              <div className="mt-4 grid grid-cols-2 gap-4">
+                {imgSrc.map((img, index) => (
+                  <img
+                    key={index}
+                    src={`data:image/png;base64,${img}`}
+                    alt={`Car Preview ${index + 1}`}
+                    className="mt-2"
+                    width="100"
+                  />
+                ))}
+              </div>
 
               <button
                 type="submit"

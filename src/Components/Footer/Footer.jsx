@@ -200,7 +200,7 @@ const Footer = () => {
                     name="EMAIL"
                     placeholder="Your email address"
                     required
-                    className="p-4  bg-transparent  "
+                    className="p-4  bg-transparent outline-none "
                   />
                   <button
                     type="submit"
