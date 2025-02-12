@@ -3,11 +3,6 @@ import { FaWhatsapp } from "react-icons/fa";
 import Select from "react-select";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
-import dayjs from "dayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { HiUser } from "react-icons/hi";
 
 const CarRent = () => {
@@ -20,10 +15,15 @@ const CarRent = () => {
 
   const [formData, setFormData] = useState({
     name: "",
-    location: "",
-    time: dayjs().format("HH:mm"),
-    startDate: dayjs(), // Default to today's date
-    endDate: dayjs(),
+    email: "",
+    dropoffLocation: "",
+    pickupLocation: "",
+    time: new Date().toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    }),
+    startDate: new Date().toISOString().split("T")[0], // Default to today's date
+    endDate: new Date().toISOString().split("T")[0],
     phone: "",
     carType: "",
     mopol: "Without Mopol",
@@ -45,22 +45,24 @@ const CarRent = () => {
   ];
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [isStartDateOpen, setIsStartDateOpen] = useState(false);
-  const [isEndDateOpen, setIsEndDateOpen] = useState(false);
-  const [isTimeOpen, setIsTimeOpen] = useState(false);
 
   const handleDateChange = (field, newDate) => {
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [field]: newDate,
-    });
+    }));
   };
+
   const handleTimeChange = (newTime) => {
-    setFormData({
-      ...formData,
-      time: newTime.format("HH:mm"),
-    });
+    if (typeof newTime === "string") {
+      setFormData({ ...formData, time: newTime });
+    } else if (newTime instanceof Date) {
+      const hours = newTime.getHours().toString().padStart(2, "0");
+      const minutes = newTime.getMinutes().toString().padStart(2, "0");
+      setFormData({ ...formData, time: `${hours}:${minutes}` });
+    }
   };
+
   useEffect(() => {
     axios
       .get("https://kachabackend.onrender.com/api/rentals")
@@ -115,10 +117,7 @@ const CarRent = () => {
           totalPrice: calculatedPrice,
           formData,
           carDetails,
-          startDate: formData.startDate,
-          endDate: formData.endDate,
-          pickupLocation: formData.pickupLocation,
-          dropoffLocation: formData.dropoffLocation, // Pass other details as needed
+          // Pass other details as needed
         },
       });
     }
@@ -346,6 +345,21 @@ const CarRent = () => {
                         required
                       />
                     </div>
+                    <div className="mb-4">
+                      <label htmlFor="email" className="text-sm">
+                        Email
+                      </label>
+                      <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        className="w-full p-3 rounded-lg mt-2 bg-[#2c2c2c] border outline-none border-gray-600"
+                        placeholder="Enter Email"
+                        required
+                      />
+                    </div>
                     {/* Pick Up Location */}
                     <div className="mb-4">
                       <label className="text-white text-sm">
@@ -366,9 +380,9 @@ const CarRent = () => {
                       </label>
                       <input
                         type="text"
-                        name="dropofflocation"
+                        name="dropoffLocation"
                         className="w-full p-3 rounded-lg mt-2 bg-[#2c2c2c] border outline-none border-gray-600"
-                        value={formData.dropofflocation}
+                        value={formData.dropoffLocation}
                         onChange={handleChange}
                         placeholder="Enter drop-off Location"
                       />
@@ -393,121 +407,50 @@ const CarRent = () => {
                       />
                     </div>
 
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <div className=" gap-4">
-                        {/* Start Date */}
-                        <div
-                          className="flex flex-col gap-2  relative"
-                          onMouseEnter={() => setIsStartDateOpen(true)}
-                          onMouseLeave={() => setIsStartDateOpen(false)}
-                        >
-                          <label className="text-sm text-white">
-                            Start Date
-                          </label>
-                          <input
-                            type="text"
-                            value={formData.startDate.format("DD-MM-YYYY")}
-                            onClick={() => setIsStartDateOpen(true)}
-                            readOnly
-                            className="w-full p-3 rounded-lg mt-2 bg-[#2c2c2c] border outline-none border-gray-600"
-                          />
-                          {isStartDateOpen && (
-                            <div className="absolute z-50 bg-[#2c2c2c] border border-gray-600 p-2 rounded-lg mt-1 md:w-1/2 w-full">
-                              <DateCalendar
-                                value={formData.startDate}
-                                onChange={(newDate) => {
-                                  handleDateChange("startDate", newDate);
-                                  setIsStartDateOpen(false);
-                                }}
-                                sx={{
-                                  "& .MuiDayPicker-day": {
-                                    color: "white",
-                                  },
-                                  "& .MuiPickersDay-today": {
-                                    borderColor: "white",
-                                    color: "white",
-                                  },
-                                  "& .MuiPickersDay-root": {
-                                    color: "white",
-                                  },
-                                }}
-                              />
-                            </div>
-                          )}
-                        </div>
+                    <div className="gap-4">
+                      {/* Start Date */}
+                      <div className="flex flex-col gap-2">
+                        <label className="text-sm text-white">Start Date</label>
+                        <input
+                          type="date" // Native date picker
+                          value={formData.startDate || ""}
+                          onChange={(e) =>
+                            handleDateChange("startDate", e.target.value)
+                          }
+                          className="w-full p-3 rounded-lg mt-2 bg-[#2c2c2c] border outline-none border-gray-600 text-white"
+                        />
+                      </div>
 
-                        {/* End Date */}
-                        <div
-                          className="flex flex-col gap-2  relative"
-                          onMouseEnter={() => setIsEndDateOpen(true)}
-                          onMouseLeave={() => setIsEndDateOpen(false)}
-                        >
-                          <label className="text-sm text-white">End Date</label>
-                          <input
-                            type="text"
-                            value={formData.endDate.format("DD-MM-YYYY")}
-                            readOnly
-                            className="w-full p-3 rounded-lg mt-2 bg-[#2c2c2c] border outline-none border-gray-600"
-                          />
-                          {isEndDateOpen && (
-                            <div className="absolute z-50 bg-[#2c2c2c] border border-gray-600 p-2 rounded-lg mt-1 md:w-1/2 w-full">
-                              <DateCalendar
-                                value={formData.endDate}
-                                onChange={(newDate) => {
-                                  handleDateChange("endDate", newDate);
-                                  setIsEndDateOpen(false);
-                                }}
-                                sx={{
-                                  "& .MuiDayPicker-day": {
-                                    color: "white",
-                                  },
-                                  "& .MuiPickersDay-today": {
-                                    borderColor: "white",
-                                    color: "white",
-                                  },
-                                  "& .MuiPickersDay-root": {
-                                    color: "white",
-                                  },
-                                }}
-                              />
-                            </div>
-                          )}
-                        </div>
+                      {/* End Date */}
+                      <div className="flex flex-col gap-2">
+                        <label className="text-sm text-white">End Date</label>
+                        <input
+                          type="date" // Native date picker
+                          value={formData.endDate || ""}
+                          onChange={(e) =>
+                            handleDateChange("endDate", e.target.value)
+                          }
+                          className="w-full p-3 rounded-lg mt-2 bg-[#2c2c2c] border outline-none border-gray-600 text-white"
+                        />
                       </div>
+                    </div>
+
+                    {/* Time Picker */}
+                    <div className="flex flex-wrap gap-4">
                       {/* Time Picker */}
-                      <div className="flex flex-wrap gap-4">
-                        {/* Time Picker */}
-                        {/* Time Picker */}
-                        <div
-                          className="flex flex-col gap-2 w-full  relative"
-                          onMouseEnter={() => setIsTimeOpen(true)}
-                          onMouseLeave={() => setIsTimeOpen(false)}
-                        >
-                          <label htmlFor="time" className="text-sm text-white">
-                            Time of Booking
-                          </label>
-                          <input
-                            type="text"
-                            value={formData.time || "Select Time"} // Display selected time or placeholder
-                            readOnly
-                            className="w-full p-3 rounded-lg mt-2 bg-[#2c2c2c] border outline-none border-gray-600 cursor-pointer"
-                          />
-                          {isTimeOpen && (
-                            <div className="absolute z-50 top-0 right-10 bg-[#2c2c2c] text-white border border-gray-600 p-1 rounded-lg mt-1 w-full max-w-xs">
-                              <TimePicker
-                                value={dayjs(formData.time, "HH:mm")} // Parse the time value for display
-                                onChange={(newTime) => {
-                                  handleTimeChange(newTime); // Update the time in the formData
-                                  setIsTimeOpen(false); // Close the picker
-                                }}
-                                ampm={false} // Use 24-hour format
-                                renderInput={() => null} // Prevent rendering an additional input
-                              />
-                            </div>
-                          )}
-                        </div>
+                      <div className="flex flex-col gap-2 w-full relative">
+                        <label htmlFor="time" className="text-sm text-white">
+                          Time of Booking
+                        </label>
+                        <input
+                          type="time" // Native time picker
+                          id="time"
+                          value={formData.time || ""}
+                          onChange={(e) => handleTimeChange(e.target.value)} // Handle time change
+                          className="w-full p-3 rounded-lg mt-2 bg-[#2c2c2c] border outline-none border-gray-600 cursor-pointer text-white"
+                        />
                       </div>
-                    </LocalizationProvider>
+                    </div>
 
                     <div className="flex flex-col gap-2 w-full">
                       <label htmlFor="mopol" className="text-sm mt-4">
@@ -565,7 +508,7 @@ const CarRent = () => {
               alt={carDetails.name}
             />
             <p>Drive Type: {carDetails.driveType}</p>
-            <p>Start Date: {carDetails.day}</p>
+            <p>Start Date: {carDetails.startDate}</p>
             <p>Total Price: {calculatedPrice}</p>
           </div>
         )}

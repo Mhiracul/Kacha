@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Header from "../Components/Header/Header";
 import Footer from "../Components/Footer/Footer";
 import { FaUsers } from "react-icons/fa";
@@ -12,6 +12,8 @@ import { toast, Toaster } from "react-hot-toast"; // Importing toast
 
 const ConfirmationPage = () => {
   const { state } = useLocation();
+  const navigate = useNavigate();
+
   const { carDetails, totalPrice, formData } = state;
   const formatPrice = (price) => {
     return new Intl.NumberFormat().format(price);
@@ -33,12 +35,10 @@ const ConfirmationPage = () => {
   const handleQuantityChange = (event) => {
     setQuantity(Number(event.target.value)); // Ensure the value is a number
   };
-  const formattedDay = new Date(formData.day).toLocaleDateString("en-US", {
-    weekday: "long", // Wednesday
-    year: "numeric", // 2025
-    month: "short", // Jan
-    day: "numeric", // 1
-  });
+
+  console.log("Start Date:", formData.startDate); // Debugging
+  console.log("Drop Off Location:", formData.dropoffLocation); // Debugging
+
   const handlePaymentProofChange = (event) => {
     const file = event.target.files[0];
     const reader = new FileReader();
@@ -51,18 +51,48 @@ const ConfirmationPage = () => {
       reader.readAsDataURL(file);
     }
   };
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const month = date.toLocaleString("en-US", { month: "long" });
+    const year = date.getFullYear();
+
+    // Add suffix to the day (st, nd, rd, th)
+    const getDaySuffix = (day) => {
+      if (day > 3 && day < 21) return "th";
+      switch (day % 10) {
+        case 1:
+          return "st";
+        case 2:
+          return "nd";
+        case 3:
+          return "rd";
+        default:
+          return "th";
+      }
+    };
+
+    return `${day}${getDaySuffix(day)}, ${month} ${year}`;
+  };
+  useEffect(() => {
+    console.log("Updated Booking Data:", bookingData);
+  }, [bookingData]);
 
   // Handle the continue button to open the modal
   const handleContinueClick = () => {
     setBookingData({
       name: formData.name,
+      email: formData.email,
+      time: formData.time,
       phone: formData.phone,
       carDetails: carDetails,
       quantity,
       totalPrice: updatedTotalPrice,
+      startDate: formData.startDate,
+      endDate: formData.endDate,
       pickupLocation: formData.pickupLocation,
-      destination: formData.destination,
-      rentalDate: formData.day,
+      dropoffLocation: formData.dropoffLocation,
+      rentalDate: formData.startDate,
       rentalDuration: formData.hours,
       status: "pending",
       paymentProof: null, // Will be updated after payment proof is uploaded
@@ -121,7 +151,7 @@ const ConfirmationPage = () => {
                       {carDetails.name}
                     </h2>
                     <img
-                      src={`data:image/jpeg;base64,${carDetails.imgSrc}`}
+                      src={`data:image/jpeg;base64,${carDetails.imgSrc[0]}`}
                       alt={carDetails.name}
                       className="lg:w-40 md:w-full w-full lg:h-40 md:h-full h-full rounded-md"
                     />
@@ -201,7 +231,10 @@ const ConfirmationPage = () => {
                 <div className="mt-10 flex flex-col gap-4">
                   <div className="flex text-white justify-between items-center">
                     <p>Date</p>
-                    <p>{formattedDay}</p>
+                    <p>
+                      {formatDate(formData.startDate)} -{" "}
+                      {formatDate(formData.endDate)}
+                    </p>
                   </div>
                   <div className="flex text-white justify-between items-center">
                     <p>From</p>
@@ -209,7 +242,7 @@ const ConfirmationPage = () => {
                   </div>
                   <div className="flex text-white justify-between items-center">
                     <p>To</p>
-                    <p>{formData.destination}</p>
+                    <p>{formData?.dropoffLocation || "Not Specified"}</p>
                   </div>
                 </div>
               </div>
@@ -226,7 +259,7 @@ const ConfirmationPage = () => {
       </div>
       {showPaymentModal && (
         <div className="modal-overlay font-outfit fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="modal-content z-[99999] bg-gradient bg-gradient-to-br from-[#fff] to-transparent  p-6 rounded-lg w-96 relative">
+          <div className="modal-content z-[99999] bg-gradient bg-gradient-to-br bg-[#fff]  p-6 rounded-lg w-96 relative">
             {/* Close button */}
             <button
               onClick={() => setShowPaymentModal(false)} // Close modal when clicked

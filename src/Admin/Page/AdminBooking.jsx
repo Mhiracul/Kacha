@@ -3,6 +3,8 @@ import axios from "axios";
 import DefaultLayout from "../../adminlayout/DefaultLayout";
 import toast, { Toaster } from "react-hot-toast";
 
+const getToken = () => localStorage.getItem("adminToken");
+
 const AdminBookings = () => {
   const [bookings, setBookings] = useState([]);
 
@@ -16,12 +18,20 @@ const AdminBookings = () => {
         toast.error("Failed to fetch bookings.");
       });
   }, []);
+  const token = getToken();
 
   const handleApprove = (bookingId) => {
     // Approve the booking
     axios
       .put(
-        `https://kachabackend.onrender.com/api/bookings/${bookingId}/approve`
+        `https://kachabackend.onrender.com/api/bookings/${bookingId}/approve`,
+        {},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "x-auth-token": token,
+          },
+        }
       )
       .then((response) => {
         toast.success(response.data.message);
@@ -57,7 +67,10 @@ const AdminBookings = () => {
                         </p>
                       </div>
                       <div className="flex-1 text-right">
-                        <p>{booking.destination || "No Destination"}</p>
+                        <p>
+                          {booking.pickupLocation || "No Destination"} -
+                          {booking.dropoffLocation}{" "}
+                        </p>
                         <p>Status: {booking.status || "Pending"}</p>
                       </div>
                     </div>

@@ -19,6 +19,7 @@ import EditCar from "./Admin/Page/EditCar";
 import AddCarRent from "./Admin/Page/AddCarRent";
 import ConfirmationPage from "./Pages/ConfirmationPage";
 import AdminBookings from "./Admin/Page/AdminBooking";
+import EditCarRents from "./Admin/Page/EditCarRents";
 
 const getToken = () => localStorage.getItem("adminToken");
 
@@ -61,6 +62,7 @@ function App() {
           <Route path="/car-rentals" element={<CarRentals />} />
           <Route path="/car-details/:carName" element={<CarDetails />} />
           <Route path="/edit-car" element={<EditCar />} />
+          <Route path="/edit-car-rents" element={<EditCarRents />} />
           <Route path="/add-car-rent" element={<AddCarRent />} />
           <Route path="/confirmation" element={<ConfirmationPage />} />
           <Route path="/rentals-booking" element={<AdminBookings />} />

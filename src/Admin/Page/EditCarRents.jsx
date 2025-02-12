@@ -14,14 +14,14 @@ const EditCarRents = () => {
   const [editedDetails, setEditedDetails] = useState({
     name: "",
     price: "",
-    details: "",
+    twentyFourHoursPrice: "",
   });
 
   useEffect(() => {
     const fetchCars = async () => {
       try {
         const response = await axios.get(
-          "https://kachabackend.onrender.com/api/cars"
+          "https://kachabackend.onrender.com/api/rentals"
         );
         setCars(response.data);
       } catch (error) {
@@ -37,7 +37,7 @@ const EditCarRents = () => {
     setEditedDetails({
       name: car.name,
       price: car.price,
-      details: car.details,
+      twentyFourHoursPrice: car.twentyFourHoursPrice,
     });
     setShowModal(true);
   };
@@ -46,7 +46,7 @@ const EditCarRents = () => {
     if (selectedCar) {
       try {
         const response = await axios.put(
-          `https://kachabackend.onrender.com/api/carss/${selectedCar._id}`,
+          `https://kachabackend.onrender.com/api/rentals/${selectedCar._id}`,
           editedDetails
         );
         // Update the car list after successful edit
@@ -80,7 +80,9 @@ const EditCarRents = () => {
 
   const handleDeleteClick = async (carId) => {
     try {
-      await axios.delete(`https://kachabackend.onrender.com/api/cars/${carId}`);
+      await axios.delete(
+        `https://kachabackend.onrender.com/api/rentals/${carId}`
+      );
       setCars((prevCars) => prevCars.filter((car) => car._id !== carId));
 
       // SweetAlert2 Success Notification
@@ -142,8 +144,10 @@ const EditCarRents = () => {
   return (
     <DefaultLayout>
       <div className="w-full font-outfit text-white py-10">
-        <div className="md:px-20 px-10">
-          <h1 className="text-xl font-bold text-[#1C5FCC] mb-4">Edit Cars</h1>
+        <div className="md:px-20 px-4">
+          <h1 className="text-xl font-bold text-[#1C5FCC] mb-4">
+            Edit Rental Cars
+          </h1>
 
           {/* Car Grid */}
           <div className="grid lg:grid-cols-2 md:grid-cols-1 grid-cols-1 gap-10 py-10">
@@ -166,17 +170,25 @@ const EditCarRents = () => {
                 </div>
 
                 <img
-                  src={`data:image/${
-                    car.imgSrc.includes("png") ? "png" : "jpeg"
-                  };base64,${car.imgSrc}`}
+                  src={`data:image/jpeg;base64,${car.imgSrc[0]}`}
                   alt={car.name}
                   className="rounded-md h-40 w-full object-cover mb-4"
                 />
 
                 <h2 className="text-lg text-white font-medium">{car.name}</h2>
-                <p className="text-gray-300 text-sm mb-4">{car.details}</p>
+
                 <p className="text-[#f5b754] font-bold mb-4">
-                  ₦{car.price.toLocaleString()}
+                  ₦{car.price.toLocaleString()}{" "}
+                  <span className="text-gray-300 font-light text-xs mb-4">
+                    12 hours
+                  </span>
+                </p>
+
+                <p className="text-[#f5b754] font-bold mb-4">
+                  ₦{car.twentyFourHoursPrice.toLocaleString()}{" "}
+                  <span className="text-gray-300 font-light text-xs mb-4">
+                    24 hours
+                  </span>
                 </p>
 
                 <button
@@ -186,8 +198,7 @@ const EditCarRents = () => {
                   Edit
                 </button>
 
-                <div className="flex items-center justify-between mt-4">
-                  {/* Toggle Status Buttons */}
+                {/*   <div className="flex items-center justify-between mt-4">
                   <div className="flex gap-2">
                     <button
                       className={`px-3 py-1 rounded ${
@@ -213,7 +224,9 @@ const EditCarRents = () => {
                       Sold Out
                     </button>
                   </div>
+                  
                 </div>
+                */}
               </div>
             ))}
           </div>
@@ -260,17 +273,19 @@ const EditCarRents = () => {
               placeholder="Price"
               className="w-full mb-4 px-3 py-2 bg-gray-800 rounded"
             />
-            <textarea
-              value={editedDetails.details}
+            <input
+              type="number"
+              value={editedDetails.twentyFourHoursPrice}
               onChange={(e) =>
                 setEditedDetails((prev) => ({
                   ...prev,
-                  details: e.target.value,
+                  twentyFourHoursPrice: e.target.value,
                 }))
               }
-              placeholder="Details"
+              placeholder="24 hours Price"
               className="w-full mb-4 px-3 py-2 bg-gray-800 rounded"
             />
+
             <div className="flex justify-end gap-4">
               <button
                 onClick={handleSaveEdit}
